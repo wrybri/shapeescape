@@ -63,6 +63,8 @@ var mobPause2Duration = 2;				// Seconds delay after level-up
 var mobStarPoints = 5;					// Number of points stars have
 var mobStrokeWidth = 2;					// Stroke width for moving shapes
 var mobShapes = 5;						// Number of different types of shapes
+var mobFills = ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'];		// Fill colours
+var mobStrokes = ['#cc6666', '#66cc66', '#6666cc', '#cc66cc', '#cccc66'];	// Stroke colours
 
 // Gate constants
 var gateState = 0;						// 0 closed, 1 opening, 2 open, 3 closing
@@ -97,7 +99,7 @@ var rulesNoColour = "red";				// Colour for 'no' symbol
 var rulesShapeColour = "black";			// Colour for rules shapes
 var ruleShapePosMax = 1;				// Max number of must-have-this-shape rules
 var ruleShapeNegMax = 2;				// Max number of must-not-have-this-shape rules
-var ruleColourPosMax = 0;				// Max number of must-have-this-colour rules
+var ruleColourPosMax = 1;				// Max number of must-have-this-colour rules
 var ruleColourNegMax = 2;				// Max number of must-not-have-this-colour rules
 
 // Game Over
@@ -234,7 +236,9 @@ function onFrame(event) {
 			if (DEBUG4) memo4.innerHTML += "Mob " + looper + "\n<br>";
 			var mobShapeType = Math.floor(Math.random() * mobShapes);
 			var originYInit = originY - mobGroupHeight / 2 + looper * (2 * mobMasterRadius + mobYSpacing);
+
 			//Generate colours for fill style and line style
+			/*
 			r = Math.floor(Math.random() * 2);
 			g = Math.floor(Math.random() * 2);
 			b = Math.floor(Math.random() * 2);			
@@ -245,6 +249,11 @@ function onFrame(event) {
 				fillStyle = "#eeeeee";
 				strokeStyle = "#cccccc";
 			}
+			*/
+			var mobColourIndex = Math.floor(Math.random() * mobFills.length);
+			fillStyle = mobFills[mobColourIndex];
+			strokeStyle = mobStrokes[mobColourIndex];
+			
 			// Paper.JS
 			if (mobShapeType == 0) { 	// Circle
 				var mobPaper = new Path.Circle({
@@ -822,7 +831,7 @@ function newRule() {
 	
 	do {
 	// Generate a new random rule
-	var nRule = [Math.floor(Math.random() * 2), Math.floor(Math.random() * 2),Math.floor(Math.random() * mobShapes), randStyle(), []];
+	var nRule = [Math.floor(Math.random() * 2), Math.floor(Math.random() * 2),Math.floor(Math.random() * mobShapes), mobFills[Math.floor(Math.random() * mobFills.length)], []];
 	// If the new rule exceeds any of the rule-type maximums, re-roll it
 	if (nRule[0] == 0 && nRule[1] == 0 && shapePos == ruleShapePosMax) continue;
 	if (nRule[0] == 0 && nRule[1] == 1 && shapeNeg == ruleShapeNegMax) continue;
