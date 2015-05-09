@@ -61,7 +61,7 @@ var mobPauseTimestamp = null;			// Timestamp for initiation of a mob-pause
 var mobPauseDuration = 3;				// Seconds delay (for new mobs) before level-up
 var mobPause2Duration = 2;				// Seconds delay after level-up
 var mobStarPoints = 5;					// Number of points stars have
-var mobStrokeWidth = 4;					// Stroke width for moving shapes
+var mobStrokeWidth = 2;					// Stroke width for moving shapes
 var mobShapes = 5;						// Number of different types of shapes
 
 // Gate constants
@@ -96,7 +96,7 @@ var rulesNoSize = 1.5;					// How big the 'no' symbol for rules should be, vs mo
 var rulesNoColour = "red";				// Colour for 'no' symbol
 var rulesShapeColour = "black";			// Colour for rules shapes
 var ruleShapePosMax = 1;				// Max number of must-have-this-shape rules
-var ruleShapeNegMax = 1;				// Max number of must-not-have-this-shape rules
+var ruleShapeNegMax = 2;				// Max number of must-not-have-this-shape rules
 var ruleColourPosMax = 0;				// Max number of must-have-this-colour rules
 var ruleColourNegMax = 2;				// Max number of must-not-have-this-colour rules
 
@@ -250,7 +250,6 @@ function onFrame(event) {
 				var mobPaper = new Path.Circle({
 					center: [originX, originYInit],
 					radius: mobMasterRadius,
-					fillColor: fillStyle,
 					strokeColor: strokeStyle,
 					strokeWidth: mobStrokeWidth
 				});
@@ -268,7 +267,8 @@ function onFrame(event) {
 					rectangle: new Rectangle(originX - mobMasterRadius, originYInit - mobMasterRadius, 2 * mobMasterRadius, 2 * mobMasterRadius),
 					center: [originX, originYInit],
 					fillColor: fillStyle,
-					strokeColor: strokeStyle	
+					strokeColor: strokeStyle,
+					strokeWidth: mobStrokeWidth
 				});
 			} else if (mobShapeType == 3) { // Pentagon
 				var mobPaper = new Path.RegularPolygon({
@@ -290,6 +290,17 @@ function onFrame(event) {
 					strokeWidth: mobStrokeWidth
 				});
 			}
+			
+			// Set-up colour gradient on new shape object
+			mobPaper.fillColor = {
+					gradient: {
+						stops: [[fillStyle, 0.05], [fillStyle, 0.2], [strokeStyle, 1]],
+						radial: true
+					},
+					origin: mobPaper.position,
+					destination: mobPaper.bounds.rightCenter
+				};
+				
 			// Insert new mob into array (1 shape)
 			mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
 			
@@ -489,17 +500,19 @@ function drawRuleSetPaper() {
 		if (rules[looper][0] == 0) {	// Shape-rule
 			rules[looper][4].push(drawPaperRule(rules[looper][2], rulesXcentre, rulesYstart + looper * (2 * mobMasterRadius * rulesNoSize + mobYSpacing)));
 		} else {	// Colour-rule
-			rules[looper][4].push(
-				new Path.Rectangle({
-					point: [rulesX, rulesYstart - mobMasterRadius * rulesNoSize + looper * (2 * mobMasterRadius * rulesNoSize + mobYSpacing)],
-					size: [canvas.width - rulesX, 2 * mobMasterRadius * rulesNoSize],
-					fillColor: rules[looper][3]
-				})
-			);
+			var rulesRect = new Path.Rectangle({
+				point: [rulesX, rulesYstart - mobMasterRadius * rulesNoSize + looper * (2 * mobMasterRadius * rulesNoSize + mobYSpacing)],
+				size: [canvas.width - rulesX, 2 * mobMasterRadius * rulesNoSize],
+				fillColor: rules[looper][3]
+			});
+			rulesRect.sendToBack();
+			rules[looper][4].push(rulesRect);
 		}
 		if (rules[looper][1] == 1) { 	// A reverse (Not) rule
-			rules[looper][4].push(drawNoPaper(rulesXcentre, rulesYstart + looper * (2 * mobMasterRadius * rulesNoSize + mobYSpacing),
-				rules[looper][3] == "#ff0000" && rules[looper][0] == 1?"#ffffff":rulesNoColour));
+			var newNo = drawNoPaper(rulesXcentre, rulesYstart + looper * (2 * mobMasterRadius * rulesNoSize + mobYSpacing),
+				rules[looper][3] == "#ff0000" && rules[looper][0] == 1?"#ffffff":rulesNoColour);
+			newNo.moveAbove(rules[looper][4][0]);
+			rules[looper][4].push(newNo);
 		}
 	}
 		if (DEBUG6) console.log('drawRuleSetPaper() - bottom');
@@ -638,6 +651,7 @@ function drawPaperRule(rType, rX, rY) {
 			});
 		break;
 	}
+	mobPaper.sendToBack();
 	return mobPaper;
 }
 
