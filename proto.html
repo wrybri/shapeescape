@@ -1,7 +1,7 @@
-
 <doctype html>
 <head>
 <title>Team Brain Train 5</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.22/paper-full.min.js"></script>
 <script type="text/javascript" src="paper-full.min.js"></script>
 </head>
 <body>
@@ -17,7 +17,6 @@
 var startAngle = 0;
 var endAngle = 2 * Math.PI;
 var triRatio = 0.866; // Equilateral triangle ratio of height/base
-
 // Global settings
 var canvas = document.getElementById("braingame");
 var ctx = canvas.getContext('2d');
@@ -40,14 +39,21 @@ var strikes = 0;						// User 'strikes' ie incorrect choices
 var maxStrikes = 3;						// Maximum strikes before game over
 var level = 1;							// Game 'level' ie round ie wave etc etc etc etc
 var timestamp;							// Time in milliseconds from game-start
-
+//Menu Bar Constants
+var barWidth = 50;
+var barHeight = 60;
+var barColor = "#fcef94";				//Fill Color
+var barStrokeColor = "#000000";
+//var level = 0;
+//var score = 0;
+//var strikes = 0;
 // Mobs constants
 var mobs = [];							// Array of active moving objects
 var mobCount = 0;							// Number of mob-groups created
 var xSpeed = 300; 						// Object X speed in pixels per second
 var mobMasterRadius = 25;				// Universal shape half-width
 var originX = -mobMasterRadius; 		// X origin for shapes
-var originY = canvas.height / 2;		// Y origin for shapes
+var originY = canvas.height / 2 + barHeight/2;		// Y origin for shapes
 var maxMobs = 3;						// Maximum number of mobs in a group
 var minMobs = 1;						// Minimum number mobs in a group
 var mobYSpacing = 10;					// Vertical spacing between mobs
@@ -65,14 +71,13 @@ var mobStrokeWidth = 2;					// Stroke width for moving shapes
 var mobShapes = 5;						// Number of different types of shapes
 var mobFills = ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#ffff00'];		// Fill colours
 var mobStrokes = ['#cc6666', '#66cc66', '#6666cc', '#cc66cc', '#cccc66'];	// Stroke colours
-
 // Gate constants
 var gateState = 0;						// 0 closed, 1 opening, 2 open, 3 closing
 var gateSpeed = 0.3;					// Time in seconds it takes for gates to open or close
 var gateDelay = 1.0;					// Time in seconds gates stay open before closing
 var gateMax = 120/360*2*Math.PI;		// Max angle the gates will open (in radians)
 // Length of entire gate-opening
-var gateLength = maxMobs * (2 * mobMasterRadius + mobYSpacing) + 2.5 * mobMasterRadius;
+var gateLength = maxMobs * (2 * mobMasterRadius + mobYSpacing) + 3.0 * mobMasterRadius;
 var gateWidth = 10;						// Width of gate in pixels
 var fenceWidth = 15;					// Width of fence (non-moving)
 var gateX = canvas.width - 1.25 * gateLength;	// Gate X position
@@ -82,7 +87,6 @@ var gateStrokeColour = "#333333";		// Colour of gate outline
 var gateTimestamp = null;				// Timestamp for start of gate-open event
 var gateDebug2;							// Var used with DEBUG2 to monitor gateState
 var gatePrevAngle = 0;					// A hacky way to get the gates to work with Paper.js...
-
 // Rules constants
 var rules = [];							// Array of current rules
 var rulesMax = 3;						// Max number of rules
@@ -101,7 +105,6 @@ var ruleShapePosMax = 1;				// Max number of must-have-this-shape rules
 var ruleShapeNegMax = 2;				// Max number of must-not-have-this-shape rules
 var ruleColourPosMax = 1;				// Max number of must-have-this-colour rules
 var ruleColourNegMax = 2;				// Max number of must-not-have-this-colour rules
-
 // Game Over
 var gameOverFontColour = "red";
 var gameOverFontSize = 180;				// Font-size in pixels
@@ -109,7 +112,6 @@ var gameOverFont = "arial";
 var gameOverY = (canvas.height - gameOverFontSize) / 2 + gameOverFontSize;
 var gameOverLineColour = "#ff9999";
 var gameOverLineWidth = 3;
-
 // Bad decision
 var badWords = ["Bad!", "Oops!", "NO!", "OMG", "Huh", "Stahp", "Ugh", "Oh no!"];
 var badCurrentWord = "bad";				// The current active badword
@@ -124,7 +126,6 @@ var badDuration = 0.75;					// "Bad" event duration in seconds
 var badFontColour = "255,0,0";			// Font colour in comma-separated RGB
 var badPaperColour = '#ff0000';			// Font colour for Paper.js
 var badPaper;							// Paper.js obj for 'bad' text
-
 // good decision
 var goodWords = ["Good!", "Boss!", "Sweet", "Great!", "Nice!", "OK!", 
 	"Killer!", "Woot!", "Aaight", "Wow!", "Ooh", "Lovely!", "Superb", 
@@ -142,24 +143,65 @@ var goodFontColour = "0,255,0";			// Font colour in comma-separated RGB
 var goodPaperColour = '#00ff00';		// Font colour for Paper.js
 var goodPaper;							// Paper.js obj for 'good' text
 
+//Status Bar
 
+var barGradient = {
+		gradient: {
+			stops: [["#ffffff", 0.01], ["#f1f1f1", 0.2], ["#555555", 1]],
+			radial: false
+		},
+		origin: [0, 0],
+		destination: [0, 50]
+	};
+	
+new Path.Rectangle({
+	point: [0,0],
+	size: [canvas.width, barHeight],
+	strokeColor: barStrokeColor,
+	fillColor: barGradient			
+});
+
+var levelText = new PointText({
+    point: [ 50, (barHeight + 12.5)/2],
+    content: 'Level: ' + level,
+    fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25
+});
+
+var scoreText = new PointText({
+    point: [ 300, (barHeight + 12.5)/2],
+    content: 'Score: ' + score,
+    fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25
+});
+
+var strikesText = new PointText({
+    point: [ 550, (barHeight + 12.5)/2],
+    content: 'Strikes: ' + strikes,
+    fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25
+});
 // Paper.js - Draw immobile fence pieces
 new Path.Rectangle({
-	point: [gateX - fenceWidth/2, 0],
-	size: [fenceWidth, (canvas.height - gateLength) / 2],
+	point: [gateX - fenceWidth/2, 0 + barHeight],
+	size: [fenceWidth, (canvas.height - gateLength) / 2 ],
 	strokeColor: gateStrokeColour,
 	fillColor: gateColour
 });
-
 new Path.Rectangle({
 	point: [gateX - fenceWidth/2, canvas.height - (canvas.height - gateLength) / 2],
 	size: [fenceWidth, (canvas.height - gateLength) / 2],
 	strokeColor: gateStrokeColour,
 	fillColor: gateColour
 });
-
 // Paper.js - Draw movable gate pieces in initial positions
-var topHinge = new Point(gateX + gateWidth/2, (canvas.height - gateLength) / 2);
+var topHinge = new Point(gateX + gateWidth/2, (canvas.height - gateLength) / 2 + barHeight);
 var bottomHinge = new Point(gateX + gateWidth/2, canvas.height - (canvas.height - gateLength) / 2);
 // Top
 var topGate = new Path.Rectangle({
@@ -169,7 +211,6 @@ var topGate = new Path.Rectangle({
 	fillColor: gateColour,
 	center: topHinge
 });
-
 // Bottom
 var bottomGate = new Path.Rectangle({
 	from: bottomHinge,
@@ -178,23 +219,18 @@ var bottomGate = new Path.Rectangle({
 	fillColor: gateColour,
 	center: bottomHinge
 });
-
-
 // Draw 'RULES'
 new PointText({
-	point: [rulesX, rulesY],
+	point: [rulesX, rulesY + barHeight],
 	content: 'RULES',
 	fontSize: rulesFontSize,
 	fontFamily: rulesFont,
 	fillColor: rulesColour
 });
-
-
 // Handle Paper.js click events
 function onMouseDown(event) {
 	openGate();
 }
-
 // onFrame draws one complete frame
 function onFrame(event) {
 	if (strikes < maxStrikes) {
@@ -202,7 +238,6 @@ function onFrame(event) {
 	}
 	if (!start) start = timestamp;
 	progress = timestamp - start;
-
 	// Stop new mob-creation for a few seconds before a new rule is introduced
 	if (mobPause == 0 && Math.floor(mobCount / rulesDuration) + 1 != level) {
 		mobPause = 1;
@@ -236,7 +271,6 @@ function onFrame(event) {
 			if (DEBUG4) memo4.innerHTML += "Mob " + looper + "\n<br>";
 			var mobShapeType = Math.floor(Math.random() * mobShapes);
 			var originYInit = originY - mobGroupHeight / 2 + looper * (2 * mobMasterRadius + mobYSpacing);
-
 			//Generate colours for fill style and line style
 			/*
 			r = Math.floor(Math.random() * 2);
@@ -313,7 +347,6 @@ function onFrame(event) {
 			// Insert new mob into array (1 shape)
 			mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
 			
-
 		}
 		// Insert new mob group into master mobs array
 		if (DEBUG4) memo4.innerHTML += "mobGroup.length: " + mobGroup.length + "\n<br>";
@@ -333,8 +366,6 @@ function onFrame(event) {
 			}
 		}
 	}
-
-
 	// Draw the mobs
 	for (var looper = 0 ; looper < mobs.length ; looper++) {
 		for (var looper2 = 0 ; looper2 < mobs[looper].length ; looper2++) {
@@ -343,16 +374,13 @@ function onFrame(event) {
 			
 			var mobX = tempMob[0] + (progress - tempMob[6]) / 1000 * xSpeed;  // X refresh		
 			var mobY = tempMob[1] + Math.sin((progress - tempMob[6]) / mobTransitTime * endAngle * mobOscillations) * mobYVariance;
-
 			// Paper.js
 			var mobPaperObj = tempMob[7];
 			mobPaperObj.position.x = mobX;
 			mobPaperObj.position.y = mobY;
 		}
 	}
-
 	var gateAngle = 0;
-
 	//DEBUG2
 	if (DEBUG2) {
 		if (gateDebug2 == null) gateDebug2 = gateState;
@@ -396,7 +424,6 @@ function onFrame(event) {
 			}
 		break;
 	}
-
 	// Paper.js - a hacky way to make the old gate logic work with Paper
 	if (gateAngle != gatePrevAngle) {
 		var paperGateAngle = gateAngle - gatePrevAngle;
@@ -412,7 +439,6 @@ function onFrame(event) {
 	if (DEBUG3) {
 	memo3.innerHTML = "mobCount = " + mobCount + "<br>\n";
 	}
-
 	// Add a new rule
 	// [0] rule type 0=shape 1=colour  [1] 0=regular rule 1=NOT rule  [2] shape-type (0-2 just like mobs array)
 	// [3] colour ie #ff0000  [4] Array of Paper.js shape objects (1 shape and optionally 1 'not' symbol)
@@ -453,7 +479,6 @@ function onFrame(event) {
 	if (goodFlag) {
 		ruleGood();
 	}
-
 			
 	// Remove mobs that make it past gate
 	if (mobs.length > 0 && timestamp - mobs[0][0][6] > (rulesX + mobMasterRadius) / xSpeed * 1000) {
@@ -489,13 +514,11 @@ function onFrame(event) {
 		gameOver();
 	}
 }
-
-
 // Paper.js needs its own "draw rules" functions b/c it doesn't need to draw them per frame
 function drawRuleSetPaper() {
 	if (DEBUG6) console.log('drawRuleSetPaper()');
 	var rulesXcentre = rulesX + (canvas.width - rulesX) / 2;
-	var rulesYstart = rulesY + rulesFontSize + mobMasterRadius * rulesNoSize + mobYSpacing
+	var rulesYstart = rulesY + rulesFontSize + mobMasterRadius * rulesNoSize + mobYSpacing + barHeight/2
 	
 	// Clear out the old rule shapes
 	for (var i = 0 ; i < rules.length ; i++) {
@@ -526,8 +549,6 @@ function drawRuleSetPaper() {
 	}
 		if (DEBUG6) console.log('drawRuleSetPaper() - bottom');
 }
-
-
 // Paper.js - function to remove mob group from scene
 function paperMobDealloc(deadGroup) {
 	if (DEBUG6) console.log('paperMobDealloc()');
@@ -535,8 +556,6 @@ function paperMobDealloc(deadGroup) {
 		deadGroup[i][7].remove();
 	}
 }
-
-
 // Paper.js - generic function to remove an array of objects from scene
 function paperDealloc(deadGroup) {
 	if (DEBUG6) console.log('paperDealloc()');
@@ -544,8 +563,6 @@ function paperDealloc(deadGroup) {
 		deadGroup[i].remove();
 	}
 }
-
-
 // Return a random colour (CMYK RGB or White)
 function randStyle() {
 	var r = Math.floor(Math.random() * 2);
@@ -561,7 +578,6 @@ function randStyle() {
 	
 	return fillStyle;
 }
-
 function openGate() {
 	switch(gateState) {
 	case 0:
@@ -584,8 +600,6 @@ function openGate() {
 	
 	}
 }
-
-
 // Paper.js - Draw a 'No' over a rule
 function drawNoPaper(noX, noY, noColour) {
 	if (DEBUG6) console.log('drawNoPaper()');
@@ -606,8 +620,6 @@ function drawNoPaper(noX, noY, noColour) {
 	noCompound.addChild(noLine);
 	return noCompound;
 }
-
-
 // Paper.js - Separate rule-drawing function as it does not need to be drawn each frame
 function drawPaperRule(rType, rX, rY) {
 	if (DEBUG6) console.log('drawPaperRule()');
@@ -663,7 +675,6 @@ function drawPaperRule(rType, rX, rY) {
 	mobPaper.sendToBack();
 	return mobPaper;
 }
-
 function checkRule(deadGroup) {
 	var ruleFlags = new Array(rules.length);
 	
@@ -701,11 +712,9 @@ function checkRule(deadGroup) {
 	}
 	return true;	
 }
-
 // Draw an animated "good" message on screen for misses
 function ruleGood(bX, bY) {
 	levelScore();
-
 	if (goodFlag == false) {
 		score++;
 		goodFlag = true;
@@ -743,8 +752,6 @@ function ruleGood(bX, bY) {
 		goodPaper.remove();
 	}
 }
-
-
 // Draw an animated "bad" message on screen for misses
 function ruleBad(bX, bY) {
 	levelScore();
@@ -776,7 +783,6 @@ function ruleBad(bX, bY) {
 		var badFontSize = Math.floor((progress - badTimestamp) / (badDuration * 1000) 
 		* (badFontSizeEnd - badFontSizeStart) + badFontSizeStart);
 		var badAlpha = (badDuration * 1000 - (progress - badTimestamp)) / (badDuration * 1000);
-
 		// Paper.js - scale & alpha font object
 		badPaper.scaling = badFontSize / badFontSizeStart;
 		badPaper.opacity =  badAlpha;
@@ -785,8 +791,6 @@ function ruleBad(bX, bY) {
 		badPaper.remove();
 	}
 }
-
-
 function gameOver() {
 	levelScore();
 	
@@ -802,12 +806,35 @@ function gameOver() {
 	
 	gameOverText.point.x = (canvas.width - gameOverText.bounds.width) / 2;
 }
-
 function levelScore() {
-	scoreMemo.innerHTML = "Level " + level + "\n";
-	scoreMemo.innerHTML += "<p>Score: " + score + "  Strikes: " + strikes + "<br>\n";
+levelText.remove();
+levelText = new PointText({
+    point: [ 50, (barHeight + 12.5)/2],
+    content: 'Level: ' + level,
+    fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25
+});
+scoreText.remove();
+scoreText = new PointText({
+    point: [ 300, (barHeight + 12.5)/2],
+    content: 'Score: ' + score,
+    fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25
+});
+strikesText.remove();
+strikesText = new PointText({
+    point: [ 550, (barHeight + 12.5)/2],
+    content: 'Strikes: ' + strikes,
+    fillColor: 'black',
+    fontFamily: 'Courier New',
+    fontWeight: 'bold',
+    fontSize: 25
+});
 }
-
 function newRule() {
 	// Count up numbers of existing rule-types
 	var shapePos = 0;
@@ -848,7 +875,6 @@ function newRule() {
 	return;
 	} while (1);
 }
-
 function checkRuleDupe(nR) {
 	for (var looper = 0 ; looper < rules.length ; looper++) {
 		if (nR[0] == rules[looper][0] && nR[1] == rules[looper][1]) {		// Type and polarity match
@@ -858,7 +884,6 @@ function checkRuleDupe(nR) {
 	}
 	return false;
 }
-
 // Fun fact: This function is identical to checkRuleDupe except for a single == becomes a !=
 function checkRuleContradiction(nR) {
 	for (var looper = 0 ; looper < rules.length ; looper++) {
