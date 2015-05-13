@@ -18,8 +18,14 @@ html, body {
   left:300;
 }
 
-#menubtns {
+/*#menubtns {
 	position: fixed;
 	top: 200;
 	left: 500;
 }
+
+#optionsbtn {
+	position: absolute;
+	bottom: 50;
+	right: 50;
+}*/
