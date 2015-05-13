@@ -1,0 +1,25 @@
+html, body {
+	overflow: hidden;
+}
+
+#container {
+	position: relative;
+}
+
+#menu {
+	position: relative;
+}
+
+#content {
+  font-size: 0.7em;
+  position: absolute;
+  width: 250px;
+  bottom:300;
+  left:300;
+}
+
+#menubtns {
+	position: fixed;
+	top: 200;
+	left: 500;
+}

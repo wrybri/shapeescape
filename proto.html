@@ -1,18 +1,147 @@
 <doctype html>
 <head>
-<title>Team Brain Train 5</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.22/paper-full.min.js"></script>
-<script type="text/javascript" src="paper-full.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Team Brain Train 5</title>
+    <!-- JavaScript HTML requirements -->
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css">
+    <script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.22/paper-full.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" media="all" href="css/styles.css">
+	<link rel="stylesheet" type="text/css" media="all" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="paper-full.min.js"></script>
+
 </head>
 <body>
-<canvas id = "braingame" width = 1000 height = 400></canvas>
-<p><span id = "memo">Shape Escape v0.1</span>
-<p><span id = "score"></span>
-<p><span id = "memo2"></span>
-<p><span id = "memo3"></span>
-<p><span id = "memo4"></span>
-<p><span id = "memo5"></span>
+	
+	<div data-role="page" id="menu">
+		<div id="menubtns">
+			<a href="#play">Play</a>
+			<a href="#options">Options</a>
+		</div>
+		<canvas id="menuanima" width=1000 height=400></canvas>
+		<script type = "text/paperscript" canvas = "menuanima">
+			//document.getElementById("menuanima").style.background = 'white';
+			// The amount of circles we want to make:
+			var count = 40;
+
+			// Create a symbol, which we will use to place instances of later:
+			var pathCircle = new Path.Circle({
+				center: [0, 0],
+				radius: 34,
+				fillColor: 'black',
+				strokeColor: 'grey'
+			});
+			var pathSquare = new Path.Rectangle({
+				point: [0, 0],
+				size: [30, 30],
+				fillColor: 'black',
+				strokeColor: 'grey'
+			});
+			var pathTriangle = new Path.RegularPolygon({
+				center: [0, 0],
+				sides: 3,
+				radius: 34,
+				fillColor: 'black',
+				strokeColor: 'grey'
+			});
+			var pathPentagon = new Path.RegularPolygon({
+				center: [0, 0],
+				sides: 5,
+				radius: 34,
+				fillColor: 'black',
+				strokeColor: 'grey'
+			});
+			var pathStar = new Path.Star({
+				center: [50, 50],
+				points: 5,
+				radius1: 34,
+				radius2: -34,
+				fillColor: 'black',
+				strokeColor: 'grey'
+			});
+			
+			//var symbol = new Symbol(path);
+
+			// Place the instances of the symbol:
+			for (var i = 0; i < count; i++) {
+				if(i % 2 == 0){
+					var symbol = new Symbol(pathCircle);
+				}
+				if(i % 5 == 0){
+					var symbol = new Symbol(pathSquare);
+				}
+				if(i % 7 == 0){
+					var symbol = new Symbol(pathTriangle);
+				}
+				if(i % 4 == 0){
+					var symbol = new Symbol(pathPentagon);
+				}
+				if(i % 9 == 0){
+					var symbol = new Symbol(pathStar);
+				}
+				// The center position is a random point in the view:
+				var center = Point.random() * view.size;
+				var placedSymbol = symbol.place(center);
+				placedSymbol.scale(i / count);
+			}
+
+			// The onFrame function is called up to 60 times a second:
+			function onFrame(event) {
+				// Run through the active layer's children list and change
+				// the position of the placed symbols:
+				for (var i = 0; i < count; i++) {
+					var item = project.activeLayer.children[i];
+					
+					// Move the item 1/20th of its width to the right. This way
+					// larger circles move faster than smaller circles:
+					item.position.x += item.bounds.width / 100;
+
+					// If the item has left the view on the right, move it back
+					// to the left:
+					if (item.bounds.left > view.size.width) {
+						item.position.x = -item.bounds.width;
+					}
+				}
+			}
+		</script>
+	</div>
+	
+	<div data-role="page" id="play">
+		<canvas id = "braingame" width = 10000 height = 10000></canvas>
+		<p><span id = "memo">Shape Escape v0.1</span>
+		<p><span id = "score"></span>
+		<p><span id = "memo2"></span>
+		<p><span id = "memo3"></span>
+		<p><span id = "memo4"></span>
+		<p><span id = "memo5"></span>
+		<audio preload="metadata" id="background" onloadeddata="setLowVolume()" autoplay loop> 
+  <source src="sound/time.mp3">
+</audio>
+
+<button onclick="document.getElementById('background').play()">Play Music</button>
+<button onclick="document.getElementById('background').pause()">Pause Music</button>
+<button onclick="document.getElementById('background').pause(); document.getElementById('background').currentTime = 0;">Stop Music</button>
+	</div>
+	
+	<div data-role="page" id="options">
+		<div id="content">
+			<div id="defaultval">
+				Volume: <span id="currentval">100</span>
+			</div>
+			<div id="defaultslide"></div>
+		</div><!-- end #content -->
+	</div>
+
+
+
 <script type = "text/paperscript" canvas = "braingame">
+
 // Constants
 var startAngle = 0;
 var endAngle = 2 * Math.PI;
@@ -20,6 +149,8 @@ var triRatio = 0.866; // Equilateral triangle ratio of height/base
 // Global settings
 var canvas = document.getElementById("braingame");
 var ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 var start = null;						// Timestamp of first frame
 var progress;							// Time elapsed in ms from first frame
 var DEBUG = false;						// Debug 1 (mobs info & auto gate-trigger)
@@ -142,7 +273,49 @@ var goodDuration = 0.75;				// "good" event duration in seconds
 var goodFontColour = "0,255,0";			// Font colour in comma-separated RGB
 var goodPaperColour = '#00ff00';		// Font colour for Paper.js
 var goodPaper;							// Paper.js obj for 'good' text
+			
+//VOLUME SLIDER
+$(function(){
+  $('#defaultslide').slider({ 
+    max: 100,
+    min: 0,
+    value: 100,
+    slide: function(e,ui) {
+      $('#currentval').html(ui.value);	  //displays the current value as text to span id currentval
+		//variable.volume = ui.value * 0.01;	//adjusts volume
+	}
+  });
+});
 
+
+//Canvas resizing
+/*(function() {
+ 
+	// Start listening to resize events and
+	// draw canvas.
+	initialize();
+
+	function initialize() {
+		// Register an event listener to
+		// call the resizeCanvas() function each time 
+		// the window is resized.
+		window.addEventListener('resize', resizeCanvas, false);
+		
+		resizeCanvas();
+	}				
+
+	// Runs each time the DOM window resize event fires.
+	// Resets the canvas dimensions to match window,
+	// then draws the new borders accordingly.
+	function resizeCanvas() {
+		//if(strikes < maxStrikes){
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			//window.requestAnimationFrame(dFrame);
+		//}
+	}
+})();*/
+			
 //Status Bar
 
 var barGradient = {
@@ -165,7 +338,7 @@ var levelText = new PointText({
     point: [ 50, (barHeight + 12.5)/2],
     content: 'Level: ' + level,
     fillColor: 'black',
-    fontFamily: 'Courier New',
+    fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 25
 });
@@ -174,7 +347,7 @@ var scoreText = new PointText({
     point: [ 300, (barHeight + 12.5)/2],
     content: 'Score: ' + score,
     fillColor: 'black',
-    fontFamily: 'Courier New',
+    fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 25
 });
@@ -183,7 +356,7 @@ var strikesText = new PointText({
     point: [ 550, (barHeight + 12.5)/2],
     content: 'Strikes: ' + strikes,
     fillColor: 'black',
-    fontFamily: 'Courier New',
+    fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 25
 });
@@ -715,6 +888,7 @@ function checkRule(deadGroup) {
 // Draw an animated "good" message on screen for misses
 function ruleGood(bX, bY) {
 	levelScore();
+	var snd_good = new Audio("sound/chaching.mp3"); // hit sound
 	if (goodFlag == false) {
 		score++;
 		goodFlag = true;
@@ -728,6 +902,7 @@ function ruleGood(bX, bY) {
 		goodPaper.fontSize = goodFontSizeStart;
 		goodPaper.fontFamily = goodFont;
 		goodPaper.fillColor = goodPaperColour;
+		snd_good.play(); //"Good" choices
 		
 		// George - put your sound-effect code here for "Good" choices
 		// meh.
@@ -755,6 +930,7 @@ function ruleGood(bX, bY) {
 // Draw an animated "bad" message on screen for misses
 function ruleBad(bX, bY) {
 	levelScore();
+	var snd_bad = new Audio("sound/doh.mp3"); //miss sound
 	//scoreMemo.innerHTML += "Incorrect!!!<br>\n";
 	if (badFlag == false) {
 		strikes++;
@@ -769,6 +945,7 @@ function ruleBad(bX, bY) {
 		badPaper.fontSize = badFontSizeStart;
 		badPaper.fontFamily = badFont;
 		badPaper.fillColor = badPaperColour;
+		snd_bad.play(); //"Bad" choices
 		
 		// George - put your sound-effect code here for "Bad" choices
 		
@@ -793,7 +970,7 @@ function ruleBad(bX, bY) {
 }
 function gameOver() {
 	levelScore();
-	
+	var snd_gameover = new Audio("sound/disappointed.mp3");  //game over sound
 	var gameOverText = new PointText({
 		point: [0, gameOverY],
 		content: 'Game Over',
@@ -804,6 +981,9 @@ function gameOver() {
 		strokeWidth: gameOverLineWidth
 	});
 	
+	document.getElementById('background').pause();
+	document.getElementById('background').currentTime = 0; //stops the music
+	snd_gameover.play();//game over sound
 	gameOverText.point.x = (canvas.width - gameOverText.bounds.width) / 2;
 }
 function levelScore() {
@@ -812,7 +992,7 @@ levelText = new PointText({
     point: [ 50, (barHeight + 12.5)/2],
     content: 'Level: ' + level,
     fillColor: 'black',
-    fontFamily: 'Courier New',
+    fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 25
 });
@@ -821,7 +1001,7 @@ scoreText = new PointText({
     point: [ 300, (barHeight + 12.5)/2],
     content: 'Score: ' + score,
     fillColor: 'black',
-    fontFamily: 'Courier New',
+    fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 25
 });
@@ -830,7 +1010,7 @@ strikesText = new PointText({
     point: [ 550, (barHeight + 12.5)/2],
     content: 'Strikes: ' + strikes,
     fillColor: 'black',
-    fontFamily: 'Courier New',
+    fontFamily: 'Arial',
     fontWeight: 'bold',
     fontSize: 25
 });
@@ -894,6 +1074,12 @@ function checkRuleContradiction(nR) {
 	}
 	return false;
 }
+
+function setLowVolume() {
+    var myAudio = document.getElementById("background");  
+    myAudio.volume = 0.8; //Changed this to 0.5 or 50% volume since the function is called Set Half Volume ;)
+}
+
 </script>
 
 </body>
