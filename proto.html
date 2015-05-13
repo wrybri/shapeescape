@@ -24,44 +24,48 @@
 			<a href="#play">Play</a>
 			<a href="#options">Options</a>
 		</div>
-		<canvas id="menuanima" width=1000 height=400></canvas>
+		<canvas id="menuanima" width=3000 height=3000></canvas>
 		<script type = "text/paperscript" canvas = "menuanima">
+			var canvas = document.getElementById("menuanima");
+			var ctx = canvas.getContext('2d');
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
 			//document.getElementById("menuanima").style.background = 'white';
 			// The amount of circles we want to make:
-			var count = 40;
+			var count = canvas.width/10;
 
 			// Create a symbol, which we will use to place instances of later:
 			var pathCircle = new Path.Circle({
 				center: [0, 0],
-				radius: 34,
+				radius: 40,
 				fillColor: 'black',
 				strokeColor: 'grey'
 			});
 			var pathSquare = new Path.Rectangle({
 				point: [0, 0],
-				size: [30, 30],
+				size: [35, 35],
 				fillColor: 'black',
 				strokeColor: 'grey'
 			});
 			var pathTriangle = new Path.RegularPolygon({
 				center: [0, 0],
 				sides: 3,
-				radius: 34,
+				radius: 40,
 				fillColor: 'black',
 				strokeColor: 'grey'
 			});
 			var pathPentagon = new Path.RegularPolygon({
 				center: [0, 0],
 				sides: 5,
-				radius: 34,
+				radius: 40,
 				fillColor: 'black',
 				strokeColor: 'grey'
 			});
 			var pathStar = new Path.Star({
 				center: [50, 50],
 				points: 5,
-				radius1: 34,
-				radius2: -34,
+				radius1: 40,
+				radius2: -40,
 				fillColor: 'black',
 				strokeColor: 'grey'
 			});
@@ -86,7 +90,7 @@
 					var symbol = new Symbol(pathStar);
 				}
 				// The center position is a random point in the view:
-				var center = Point.random() * view.size;
+				var center = Point.random() * screen.width;
 				var placedSymbol = symbol.place(center);
 				placedSymbol.scale(i / count);
 			}
@@ -113,7 +117,7 @@
 	</div>
 	
 	<div data-role="page" id="play">
-		<canvas id = "braingame" width = 10000 height = 10000></canvas>
+		<canvas id = "braingame" width = 3000 height = 3000></canvas>
 		<p><span id = "memo">Shape Escape v0.1</span>
 		<p><span id = "score"></span>
 		<p><span id = "memo2"></span>
@@ -273,7 +277,8 @@ var goodDuration = 0.75;				// "good" event duration in seconds
 var goodFontColour = "0,255,0";			// Font colour in comma-separated RGB
 var goodPaperColour = '#00ff00';		// Font colour for Paper.js
 var goodPaper;							// Paper.js obj for 'good' text
-			
+var gameEnd = false;
+
 //VOLUME SLIDER
 $(function(){
   $('#defaultslide').slider({ 
@@ -282,7 +287,7 @@ $(function(){
     value: 100,
     slide: function(e,ui) {
       $('#currentval').html(ui.value);	  //displays the current value as text to span id currentval
-		//variable.volume = ui.value * 0.01;	//adjusts volume
+		background.volume = ui.value * 0.01;	//adjusts volume
 	}
   });
 });
@@ -980,10 +985,13 @@ function gameOver() {
 		strokeColor: gameOverLineColour,
 		strokeWidth: gameOverLineWidth
 	});
-	
+	if(gameEnd == false){
+			snd_gameover.play();//game over sound
+			gameEnd = true;
+		}
 	document.getElementById('background').pause();
 	document.getElementById('background').currentTime = 0; //stops the music
-	snd_gameover.play();//game over sound
+	
 	gameOverText.point.x = (canvas.width - gameOverText.bounds.width) / 2;
 }
 function levelScore() {
@@ -1077,7 +1085,7 @@ function checkRuleContradiction(nR) {
 
 function setLowVolume() {
     var myAudio = document.getElementById("background");  
-    myAudio.volume = 0.8; //Changed this to 0.5 or 50% volume since the function is called Set Half Volume ;)
+    myAudio.volume = 1.0; //Changed this to 0.5 or 50% volume since the function is called Set Half Volume ;)
 }
 
 </script>
