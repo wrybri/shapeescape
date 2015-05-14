@@ -5,101 +5,112 @@
 <script type="text/javascript" src="paper-full.min.js"></script>
 <!-- Define inlined PaperScript associate it with myCanvas -->
 <script type="text/paperscript" canvas="c">
-var xPos = 300;
-var yPos = 300;
+var xPos = 100;
+var yPos = 100;
 var vec_speed = 30;
 var letter_color = 'white';
-var letter_font = ["tahoma", "verdana", "comic sans ms"];
+var letter_font = ["tahoma"];
 var letter_weight = 'bold';
-var letter_size = 50;
-
+var letter_size = 100;
+var letter_scale = 2;
 var s_letter1 = new PointText({
     point: [xPos, yPos],
     content: 'S',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var h_letter = new PointText({
-    point: [xPos+30, yPos],
+    point: [xPos+30*letter_scale, yPos],
     content: 'H',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var a_letter1 = new PointText({
-    point: [xPos+65, yPos],
+    point: [xPos+65*letter_scale, yPos],
     content: 'A',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var p_letter1 = new PointText({
-    point: [xPos+95, yPos],
+    point: [xPos+95*letter_scale, yPos],
     content: 'P',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var e_letter1 = new PointText({
-    point: [xPos+125, yPos],
+    point: [xPos+125*letter_scale, yPos],
     content: 'E',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var e_letter2 = new PointText({
-    point: [xPos+170, yPos],
+    point: [xPos+170*letter_scale, yPos],
     content: 'E',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var s_letter2 = new PointText({
-    point: [xPos+200, yPos],
+    point: [xPos+200*letter_scale, yPos],
     content: 'S',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var c_letter = new PointText({
-    point: [xPos+230, yPos],
+    point: [xPos+230*letter_scale, yPos],
     content: 'C',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var a_letter2 = new PointText({
-    point: [xPos+265, yPos],
+    point: [xPos+265*letter_scale, yPos],
     content: 'A',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var p_letter2 = new PointText({
-    point: [xPos+300, yPos],
+    point: [xPos+300*letter_scale, yPos],
     content: 'P',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var e_letter3 = new PointText({
-    point: [xPos+330, yPos],
+    point: [xPos+330*letter_scale, yPos],
     content: 'E',
     fillColor: letter_color,
     fontFamily: letter_font,
     fontWeight: letter_weight,
-    fontSize: letter_size
+    fontSize: letter_size,
+	scale: letter_scale
 });
 var letter_s1 = new Group({children: [s_letter1]});
 var dest_s_letter1 = s_letter1.position;
