@@ -21,11 +21,11 @@
 	
 	<div data-role="page" id="menu">
 		<canvas id="menuanima" width=3000 height=3000></canvas>
-		<div id="menubtns">
-			<a href="#play"><img src="pngBtns/PlayBtn.png" id="playbtn" /></a>
-			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" id="tutbtn" /></a>
-			<a href="#leaderboard"><img src="pngBtns/LBBtn.png" id="lbbtn" /></a>
-			<a href="#options"><img src="pngBtns/OptionsBtn.png" id="optionsbtn" /></a>
+		<div >
+			<a href="#play"><img src="pngBtns/PlayBtn.png" class="menubtns" id="playbtn" /></a>
+			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" class="menubtns" id="tutbtn" /></a>
+			<a href="#leaderboard"><img src="pngBtns/LBBtn.png" class="menubtns" id="lbbtn" /></a>
+			<a href="#options"><img src="pngBtns/OptionsBtn.png" class="menubtns" id="optionsbtn" /></a>
 		</div>
 	</div>
 	
@@ -49,11 +49,17 @@
 	<div data-role="page" id="options">
 		<a href="#" data-rel="back">Go Back</a>
 		<div id="content">
-			<div id="defaultval">
-				Volume: <span id="currentval">100</span>
+			<div id="bgm">
+				Volume: <span id="bgmval">100</span>
 			</div>
-			<div id="defaultslide"></div>
+			<div id="bgmslide"></div>
+			
+			<div id="sfx">
+				Sound Effects: <span id="sfxval">100</span>
+			</div>
+			<div id="sfxslide"></div>
 		</div><!-- end #content -->
+		
 	</div>
 	
 	<div data-role="page" id="tutorial">
@@ -203,13 +209,24 @@ var gameEnd = false;
 
 //VOLUME SLIDER
 $(function(){
-  $('#defaultslide').slider({ 
+  $('#bgmslide').slider({ 
     max: 100,
     min: 0,
     value: 100,
     slide: function(e,ui) {
-      $('#currentval').html(ui.value);	  //displays the current value as text to span id currentval
+      $('#bgmval').html(ui.value);	  //displays the current value as text to span id currentval
 		background.volume = ui.value * 0.01;	//adjusts volume
+	}
+  });
+  $('#sfxslide').slider({ 
+    max: 100,
+    min: 0,
+    value: 100,
+    slide: function(e,ui) {
+      $('#sfxval').html(ui.value);	  //displays the current value as text to span id currentval
+		snd_good.volume = ui.value * 0.01;	//adjusts volume
+		snd_bad.volume = ui.value * 0.01;	//adjusts volume
+		snd_gameover.volume = ui.value * 0.01;	//adjusts volume
 	}
   });
 });
@@ -1033,7 +1050,7 @@ function setLowVolume() {
 	
 	//button hover functions
 	$(function() {
-		$("img")
+		$("img.menubtns")
 			.mouseover(function() { 
 				var src = $(this).attr("src").match(/[^\.]+/) + "Over.png";
 				$(this).attr("src", src);
