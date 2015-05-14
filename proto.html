@@ -39,6 +39,9 @@
 		<p><span id = "memo5"></span>
 		<audio preload="metadata" id="background" onloadeddata="setLowVolume()" autoplay loop> 
 		<source src="sound/time.mp3">
+		<div >
+			<a href="#pause"><img src="pngBtns/pauseBtn.png" id="pausebtn" /></a>
+		</div>
 		</audio>
 
 		<button onclick="document.getElementById('background').play()">Play Music</button>
@@ -304,6 +307,12 @@ var strikesText = new PointText({
     fontWeight: 'bold',
     fontSize: 25
 });
+
+	var pausebutton = document.getElementById('pausebtn');
+	pausebutton.style.position = "absolute";
+	pausebutton.style.left = window.innerWidth - 100;
+	pausebutton.style.top = window.innerHeight - (window.innerHeight - 5);
+	
 // Paper.js - Draw immobile fence pieces
 new Path.Rectangle({
 	point: [gateX - fenceWidth/2, 0 + barHeight],
