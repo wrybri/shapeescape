@@ -20,7 +20,7 @@
 <body>
 	
 	<div data-role="page" id="menu">
-		<canvas id="menuanima" width=3000 height=3000></canvas>
+		<canvas id="c" width=3000 height=3000></canvas>
 		<div >
 			<a href="#play"><img src="pngBtns/PlayBtn.png" class="menubtns" id="playbtn" /></a>
 			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" class="menubtns" id="tutbtn" /></a>
@@ -40,10 +40,6 @@
 		<audio preload="metadata" id="background" onloadeddata="setLowVolume()" autoplay loop> 
 		<source src="sound/time.mp3">
 		</audio>
-
-		<button onclick="document.getElementById('background').play()">Play Music</button>
-		<button onclick="document.getElementById('background').pause()">Pause Music</button>
-		<button onclick="document.getElementById('background').pause(); document.getElementById('background').currentTime = 0;">Stop Music</button>
 	</div>
 	
 	<div data-role="page" id="options">
@@ -1029,7 +1025,156 @@ function setLowVolume() {
 
 </script>
 <!-- main menu script-->
-<script type = "text/paperscript" canvas = "menuanima">
+<script type = "text/paperscript" canvas = "c">
+//title
+var xPos = 200;
+var yPos = 150;
+var vec_speed = 30;
+var letter_color = 'black';
+var letter_font = ["tahoma"];
+var letter_weight = 'bold';
+var letter_size = 100;
+
+var s_letter1 = new PointText({
+    point: [xPos+letter_size, yPos],
+    content: 'S',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var h_letter = new PointText({
+    point: [xPos+30+letter_size, yPos],
+    content: 'H',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var a_letter1 = new PointText({
+    point: [xPos+65+letter_size, yPos],
+    content: 'A',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var p_letter1 = new PointText({
+    point: [xPos+95, yPos],
+    content: 'P',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var e_letter1 = new PointText({
+    point: [xPos+125, yPos],
+    content: 'E',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var e_letter2 = new PointText({
+    point: [xPos+170, yPos],
+    content: 'E',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var s_letter2 = new PointText({
+    point: [xPos+200, yPos],
+    content: 'S',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var c_letter = new PointText({
+    point: [xPos+230, yPos],
+    content: 'C',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var a_letter2 = new PointText({
+    point: [xPos+265, yPos],
+    content: 'A',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var p_letter2 = new PointText({
+    point: [xPos+300, yPos],
+    content: 'P',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var e_letter3 = new PointText({
+    point: [xPos+330, yPos],
+    content: 'E',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var letter_s1 = new Group({children: [s_letter1]});
+var dest_s_letter1 = s_letter1.position;
+letter_s1.position = [c.width-1000, c.height+200];
+
+var letter_h = new Group({children: [h_letter]});
+var dest_h_letter = h_letter.position;
+letter_h.position = [c.width-800, c.height+200];
+
+var letter_a1 = new Group({children: [a_letter1]});
+var dest_a_letter1 = a_letter1.position;
+letter_a1.position = [c.width-600, c.height+200];
+
+var letter_p1 = new Group({children: [p_letter1]});
+var dest_p_letter1 = p_letter1.position;
+letter_p1.position = [c.width-400, c.height+200];
+
+var letter_e1 = new Group({children: [e_letter1]});
+var dest_e_letter1 = e_letter1.position;
+letter_e1.position = [c.width-300, c.height+200];
+
+var letter_e2 = new Group({children: [e_letter2]});
+var dest_e_letter2 = e_letter2.position;
+letter_e2.position = [c.width-1000, c.height-1600];
+
+var letter_s2 = new Group({children: [s_letter2]});
+var dest_s_letter2 = s_letter2.position;
+letter_s2.position = [c.width-900, c.height-1600];
+
+var letter_c = new Group({children: [c_letter]});
+var dest_c_letter = c_letter.position;
+letter_c.position = [c.width-800, c.height-1600];
+
+var letter_a2 = new Group({children: [a_letter2]});
+var dest_a_letter2 = a_letter2.position;
+letter_a2.position = [c.width-700, c.height-1600];
+
+var letter_p2 = new Group({children: [p_letter2]});
+var dest_p_letter2 = p_letter2.position;
+letter_p2.position = [c.width-600, c.height-1600];
+
+var letter_e3 = new Group({children: [e_letter3]});
+var dest_e_letter3 = e_letter3.position;
+letter_e3.position = [c.width-500, c.height-1600];
+
+/*	
+function nextFont() {
+	var count = -1;
+    return function() {
+		return letter_font[++count % letter_font.length];
+	}
+}*/
+
 //button positioning
 	var playbutton = document.getElementById('playbtn');
 	playbutton.style.position = "absolute";
@@ -1062,12 +1207,12 @@ function setLowVolume() {
 	});
 	
 	//main menu resizing
-	var canvas = document.getElementById("menuanima");
+	var canvas = document.getElementById("c");
 	var ctx = canvas.getContext('2d');
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	
-	//document.getElementById("menuanima").style.background = 'white';
+	//document.getElementById("c").style.background = 'white';
 	// The amount of circles we want to make:
 	var count = canvas.width/10;
 
@@ -1134,7 +1279,8 @@ function setLowVolume() {
 
 	// The onFrame function is called up to 60 times a second:
 	function onFrame(event) {
-		// Run through the active layer's children list and change
+	
+	// Run through the active layer's children list and change
 		// the position of the placed symbols:
 		for (var i = 0; i < count; i++) {
 			var item = project.activeLayer.children[i];
@@ -1149,6 +1295,63 @@ function setLowVolume() {
 				item.position.x = -item.bounds.width;
 			}
 		}
+		
+		//Title
+		var vector1 = dest_s_letter1 - letter_s1.position;
+		letter_s1.position+=vector1/vec_speed;
+		letter_s1.content = Math.round(vector1.length);
+		
+		var vector2 = dest_h_letter - letter_h.position;
+		letter_h.position+=vector2/vec_speed;
+		letter_h.content = Math.round(vector2.length);
+		
+		var vector3 = dest_a_letter1 - letter_a1.position;
+		letter_a1.position+=vector3/vec_speed;
+		letter_a1.content = Math.round(vector3.length);
+		
+		var vector4 = dest_p_letter1 - letter_p1.position;
+		letter_p1.position+=vector4/vec_speed;
+		letter_p1.content = Math.round(vector4.length);
+		
+		var vector5 = dest_e_letter1 - letter_e1.position;
+		letter_e1.position+=vector5/vec_speed;
+		letter_e1.content = Math.round(vector5.length);
+		
+		var vector6 = dest_e_letter2 - letter_e2.position;
+		letter_e2.position+=vector6/vec_speed;
+		letter_e2.content = Math.round(vector6.length);
+		
+		var vector7 = dest_s_letter2 - letter_s2.position;
+		letter_s2.position+=vector7/vec_speed;
+		letter_s2.content = Math.round(vector7.length);
+		
+		var vector8 = dest_c_letter - letter_c.position;
+		letter_c.position+=vector8/vec_speed;
+		letter_c.content = Math.round(vector8.length);
+		
+		var vector9 = dest_a_letter2 - letter_a2.position;
+		letter_a2.position+=vector9/vec_speed;
+		letter_a2.content = Math.round(vector9.length);
+		
+		var vector10 = dest_p_letter2 - letter_p2.position;
+		letter_p2.position+=vector10/vec_speed;
+		letter_p2.content = Math.round(vector10.length);
+		
+		var vector11 = dest_e_letter3 - letter_e3.position;
+		letter_e3.position+=vector11/vec_speed;
+		letter_e3.content = Math.round(vector11.length);
+		
+		letter_s1.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_h.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_a1.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_p1.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_e1.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_e2.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_s2.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_c.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_a2.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_p2.fillColor = new Color(Math.random(), Math.random(), Math.random());
+		letter_e3.fillColor = new Color(Math.random(), Math.random(), Math.random());
 	}
 	
 	
