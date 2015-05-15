@@ -47,17 +47,27 @@
 	
 	<div data-role="page" id="options">
 		<a href="#" data-rel="back">Go Back</a>
-		<div id="content">
-			<div id="bgm">
-				Volume: <span id="bgmval">100</span>
-			</div>
-			<div id="bgmslide"></div>
-			
-			<div id="sfx">
-				Sound Effects: <span id="sfxval">100</span>
-			</div>
-			<div id="sfxslide"></div>
-		</div><!-- end #content -->
+		
+		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+		  Master volume
+		</p>
+		
+		<div id="master" style="width:260px; margin:15px;"></div>
+		
+		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+		  BGM
+		</p>
+		
+		<div id="bgm" style="width:260px; margin:15px;"></div>
+		
+		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+		  SFX
+		</p>
+		
+		<div id="sfx" style="width:260px; margin:15px;"></div>
 		
 	</div>
 	
@@ -67,6 +77,19 @@
 	
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back">Go Back</a>
+		
+		<div id="abcd">renan</div>
+		<script>
+		
+		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+			$.each(data, function (index, value) {
+
+			$("#abcd").html(value.name);
+			
+			});
+		 $('#tblLeaderBoard').append(html);
+		});
+		</script>
 	</div>
 
 
@@ -207,28 +230,36 @@ var goodPaper;							// Paper.js obj for 'good' text
 var gameEnd = false;
 
 //VOLUME SLIDER
-$(function(){
-  $('#bgmslide').slider({ 
-    max: 100,
-    min: 0,
-    value: 100,
-    slide: function(e,ui) {
-      $('#bgmval').html(ui.value);	  //displays the current value as text to span id currentval
-		background.volume = ui.value * 0.01;	//adjusts volume
-	}
+$(function() {
+    // setup master volume
+    $( "#master" ).slider({
+      value: 100,
+      orientation: "horizontal",
+      range: "min",
+      animate: true,
+	  slide: function(event,ui) {
+		background.volume = ui.value * 0.01;
+	  }
+    });
+	$( "#bgm" ).slider({
+      value: 100,
+      orientation: "horizontal",
+      range: "min",
+      animate: true,
+	  slide: function(event,ui) {
+		background.volume = ui.value * 0.01;
+	  }
+    });
+	$( "#sfx" ).slider({
+      value: 100,
+      orientation: "horizontal",
+      range: "min",
+      animate: true,
+	  slide: function(event,ui) {
+		
+	  }
+    });
   });
-  $('#sfxslide').slider({ 
-    max: 100,
-    min: 0,
-    value: 100,
-    slide: function(e,ui) {
-      $('#sfxval').html(ui.value);	  //displays the current value as text to span id currentval
-		snd_good.volume = ui.value * 0.01;	//adjusts volume
-		snd_bad.volume = ui.value * 0.01;	//adjusts volume
-		snd_gameover.volume = ui.value * 0.01;	//adjusts volume
-	}
-  });
-});
 
 
 //Canvas resizing

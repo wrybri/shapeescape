@@ -10,22 +10,6 @@ html, body {
 	position: relative;
 }
 
-#content {
-  font-size: 0.7em;
-  position: absolute;
-  width: 250px;
-  bottom:300;
-  left:300;
-}
-
-/*#menubtns {
-	position: fixed;
-	top: 200;
-	left: 500;
-}
-
-#optionsbtn {
-	position: absolute;
-	bottom: 50;
-	right: 50;
-}*/
+#eq > span {
+    height:120px; float:left; margin:15px
+  }
