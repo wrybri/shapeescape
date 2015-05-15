@@ -1035,154 +1035,7 @@ function setLowVolume() {
 </script>
 <!-- main menu script-->
 <script type = "text/paperscript" canvas = "c">
-//title
-var xPos = 200;
-var yPos = 150;
-var vec_speed = 30;
-var letter_color = 'black';
-var letter_font = ["tahoma"];
-var letter_weight = 'bold';
-var letter_size = 100;
 
-var s_letter1 = new PointText({
-    point: [xPos+letter_size, yPos],
-    content: 'S',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var h_letter = new PointText({
-    point: [xPos+30+letter_size, yPos],
-    content: 'H',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var a_letter1 = new PointText({
-    point: [xPos+65+letter_size, yPos],
-    content: 'A',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var p_letter1 = new PointText({
-    point: [xPos+95, yPos],
-    content: 'P',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var e_letter1 = new PointText({
-    point: [xPos+125, yPos],
-    content: 'E',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var e_letter2 = new PointText({
-    point: [xPos+170, yPos],
-    content: 'E',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var s_letter2 = new PointText({
-    point: [xPos+200, yPos],
-    content: 'S',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var c_letter = new PointText({
-    point: [xPos+230, yPos],
-    content: 'C',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var a_letter2 = new PointText({
-    point: [xPos+265, yPos],
-    content: 'A',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var p_letter2 = new PointText({
-    point: [xPos+300, yPos],
-    content: 'P',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var e_letter3 = new PointText({
-    point: [xPos+330, yPos],
-    content: 'E',
-    fillColor: letter_color,
-    fontFamily: letter_font,
-    fontWeight: letter_weight,
-    fontSize: letter_size
-});
-var letter_s1 = new Group({children: [s_letter1]});
-var dest_s_letter1 = s_letter1.position;
-letter_s1.position = [c.width-1000, c.height+200];
-
-var letter_h = new Group({children: [h_letter]});
-var dest_h_letter = h_letter.position;
-letter_h.position = [c.width-800, c.height+200];
-
-var letter_a1 = new Group({children: [a_letter1]});
-var dest_a_letter1 = a_letter1.position;
-letter_a1.position = [c.width-600, c.height+200];
-
-var letter_p1 = new Group({children: [p_letter1]});
-var dest_p_letter1 = p_letter1.position;
-letter_p1.position = [c.width-400, c.height+200];
-
-var letter_e1 = new Group({children: [e_letter1]});
-var dest_e_letter1 = e_letter1.position;
-letter_e1.position = [c.width-300, c.height+200];
-
-var letter_e2 = new Group({children: [e_letter2]});
-var dest_e_letter2 = e_letter2.position;
-letter_e2.position = [c.width-1000, c.height-1600];
-
-var letter_s2 = new Group({children: [s_letter2]});
-var dest_s_letter2 = s_letter2.position;
-letter_s2.position = [c.width-900, c.height-1600];
-
-var letter_c = new Group({children: [c_letter]});
-var dest_c_letter = c_letter.position;
-letter_c.position = [c.width-800, c.height-1600];
-
-var letter_a2 = new Group({children: [a_letter2]});
-var dest_a_letter2 = a_letter2.position;
-letter_a2.position = [c.width-700, c.height-1600];
-
-var letter_p2 = new Group({children: [p_letter2]});
-var dest_p_letter2 = p_letter2.position;
-letter_p2.position = [c.width-600, c.height-1600];
-
-var letter_e3 = new Group({children: [e_letter3]});
-var dest_e_letter3 = e_letter3.position;
-letter_e3.position = [c.width-500, c.height-1600];
-
-/*	
-function nextFont() {
-	var count = -1;
-    return function() {
-		return letter_font[++count % letter_font.length];
-	}
-}*/
 
 //button positioning
 	var playbutton = document.getElementById('playbtn');
@@ -1285,6 +1138,166 @@ function nextFont() {
 		var placedSymbol = symbol.place(center);
 		placedSymbol.scale(i / count);
 	}
+	
+	//title
+	var xPos = window.innerWidth/4;
+	var yPos = window.innerHeight/4;
+	var vec_speed = 30;
+	var letter_color = 'white';
+	var letter_font = ["tahoma"];
+	var letter_weight = 'bold';
+	var letter_size = 100;
+	var letter_scale = 2;
+	var s_letter1 = new PointText({
+		point: [xPos, yPos],
+		content: 'S',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var h_letter = new PointText({
+		point: [xPos+30*letter_scale, yPos],
+		content: 'H',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var a_letter1 = new PointText({
+		point: [xPos+65*letter_scale, yPos],
+		content: 'A',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var p_letter1 = new PointText({
+		point: [xPos+95*letter_scale, yPos],
+		content: 'P',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var e_letter1 = new PointText({
+		point: [xPos+125*letter_scale, yPos],
+		content: 'E',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var e_letter2 = new PointText({
+		point: [xPos+170*letter_scale, yPos],
+		content: 'E',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var s_letter2 = new PointText({
+		point: [xPos+200*letter_scale, yPos],
+		content: 'S',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var c_letter = new PointText({
+		point: [xPos+230*letter_scale, yPos],
+		content: 'C',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var a_letter2 = new PointText({
+		point: [xPos+265*letter_scale, yPos],
+		content: 'A',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var p_letter2 = new PointText({
+		point: [xPos+300*letter_scale, yPos],
+		content: 'P',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var e_letter3 = new PointText({
+		point: [xPos+330*letter_scale, yPos],
+		content: 'E',
+		fillColor: letter_color,
+		fontFamily: letter_font,
+		fontWeight: letter_weight,
+		fontSize: letter_size,
+		scale: letter_scale
+	});
+	var letter_s1 = new Group({children: [s_letter1]});
+	var dest_s_letter1 = s_letter1.position;
+	letter_s1.position = [c.width-1000, c.height+200];
+
+	var letter_h = new Group({children: [h_letter]});
+	var dest_h_letter = h_letter.position;
+	letter_h.position = [c.width-800, c.height+200];
+
+	var letter_a1 = new Group({children: [a_letter1]});
+	var dest_a_letter1 = a_letter1.position;
+	letter_a1.position = [c.width-600, c.height+200];
+
+	var letter_p1 = new Group({children: [p_letter1]});
+	var dest_p_letter1 = p_letter1.position;
+	letter_p1.position = [c.width-400, c.height+200];
+
+	var letter_e1 = new Group({children: [e_letter1]});
+	var dest_e_letter1 = e_letter1.position;
+	letter_e1.position = [c.width-300, c.height+200];
+
+	var letter_e2 = new Group({children: [e_letter2]});
+	var dest_e_letter2 = e_letter2.position;
+	letter_e2.position = [c.width-1000, c.height-1600];
+
+	var letter_s2 = new Group({children: [s_letter2]});
+	var dest_s_letter2 = s_letter2.position;
+	letter_s2.position = [c.width-900, c.height-1600];
+
+	var letter_c = new Group({children: [c_letter]});
+	var dest_c_letter = c_letter.position;
+	letter_c.position = [c.width-800, c.height-1600];
+
+	var letter_a2 = new Group({children: [a_letter2]});
+	var dest_a_letter2 = a_letter2.position;
+	letter_a2.position = [c.width-700, c.height-1600];
+
+	var letter_p2 = new Group({children: [p_letter2]});
+	var dest_p_letter2 = p_letter2.position;
+	letter_p2.position = [c.width-600, c.height-1600];
+
+	var letter_e3 = new Group({children: [e_letter3]});
+	var dest_e_letter3 = e_letter3.position;
+	letter_e3.position = [c.width-500, c.height-1600];
+
+	/*	
+	function nextFont() {
+		var count = -1;
+		return function() {
+			return letter_font[++count % letter_font.length];
+		}
+	}*/
 
 	// The onFrame function is called up to 60 times a second:
 	function onFrame(event) {
