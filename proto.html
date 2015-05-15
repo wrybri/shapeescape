@@ -20,7 +20,7 @@
 <body>
 	
 	<div data-role="page" id="menu">
-		<canvas id="c" width=3000 height=3000></canvas>
+		<canvas id="c" width=2000 height=2000></canvas>
 		<div >
 			<a href="#play"><img src="pngBtns/PlayBtn.png" class="menubtns" id="playbtn" /></a>
 			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" class="menubtns" id="tutbtn" /></a>
@@ -30,7 +30,7 @@
 	</div>
 	
 	<div data-role="page" id="play">
-		<canvas id = "braingame" width = 3000 height = 3000></canvas>
+		<canvas id = "braingame" width = 2000 height = 2000></canvas>
 		<p><span id = "memo">Shape Escape v0.1</span>
 		<p><span id = "score"></span>
 		<p><span id = "memo2"></span>
@@ -1076,7 +1076,7 @@ function setLowVolume() {
 	
 	//document.getElementById("c").style.background = 'white';
 	// The amount of circles we want to make:
-	var count = canvas.width/10;
+	var count = window.innerWidth/15;
 
 	// Create a symbol, which we will use to place instances of later:
 	var pathCircle = new Path.Circle({
