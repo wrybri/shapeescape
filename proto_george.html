@@ -20,7 +20,7 @@
 <body>
 	
 	<div data-role="page" id="menu">
-		<canvas id="c" width=2000 height=2000></canvas>
+		<canvas id="c" width=3000 height=3000></canvas>
 		<div >
 			<a href="#play"><img src="pngBtns/PlayBtn.png" class="menubtns" id="playbtn" /></a>
 			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" class="menubtns" id="tutbtn" /></a>
@@ -30,7 +30,7 @@
 	</div>
 	
 	<div data-role="page" id="play">
-		<canvas id = "braingame" width = 2000 height = 2000></canvas>
+		<canvas id = "braingame" width = 3000 height = 3000></canvas>
 		<p><span id = "memo">Shape Escape v0.1</span>
 		<p><span id = "score"></span>
 		<p><span id = "memo2"></span>
@@ -47,88 +47,42 @@
 	
 	<div data-role="page" id="options">
 		<a href="#" data-rel="back">Go Back</a>
-		
-		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
-		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
-		  Master volume
-		</p>
-		
-		<div id="master" style="width:260px; margin:15px;"></div>
-		
-		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
-		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
-		  BGM
-		</p>
-		
-		<div id="bgm" style="width:260px; margin:15px;"></div>
-		
-		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
-		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
-		  SFX
-		</p>
-		
-		<div id="sfx" style="width:260px; margin:15px;"></div>
+		<div id="content">
+			<div id="bgm">
+				Volume: <span id="bgmval">100</span>
+			</div>
+			<div id="bgmslide"></div>
+			
+			<div id="sfx">
+				Sound Effects: <span id="sfxval">100</span>
+			</div>
+			<div id="sfxslide"></div>
+		</div><!-- end #content -->
 		
 	</div>
-	
+<!-- start of leader board -->	
 	<div data-role="page" id="tutorial">
 		<a href="#" data-rel="back">Go Back</a>
 	</div>
 	
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back">Go Back</a>
-		<p><span id="lbname0">renan</span>
-		<span id="lbscore0">0</span>
-		<p><span id="lbname1"></span>
-		<span id="lbscore1"></span>
-		<p><span id="lbname2"></span>
-		<span id="lbscore2"></span>
-		<p><span id="lbname3"></span>
-		<span id="lbscore3"></span>
-		<p><span id="lbname4"></span>
-		<span id="lbscore4"></span>
-		<p><span id="lbname5"></span>
-		<span id="lbscore5"></span>
-		<p><span id="lbname6"></span>
-		<span id="lbscore6"></span>
-		<p><span id="lbname7"></span>
-		<span id="lbscore7"></span>
-		<p><span id="lbname8"></span>
-		<span id="lbscore8"></span>
-		<p><span id="lbname9"></span>
-		<span id="lbscore9"></span>
+		
+		<div id="abcd">renan</div>
 		<script>
 		
-		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-			var i = 0;
-			var scoreArr = [0,0,0,0,0,0,0,0,0,0];
-			var nameArr = ["", "", "", "", "", "", "", "", "", ""];
-			$.each(data, function(index, value){
-				var k = 0;
-				for (k = 0 ; k < scoreArr.length ; k++){
-					if (value.score >= scoreArr[k]){
-						var temp = 0;
-						for ( var z = scoreArr.length-1 ; z > k ; z--){
-							scoreArr[z] = scoreArr[z-1];
-							nameArr[z] = nameArr[z-1];
-						}
-						scoreArr[k] = value.score;
-						nameArr[k] = value.name;
-						k = 10;
-					}
-				}
-			});
-			var m = 0;
-			for (m = 0 ; m < 10 ; m++){
-				$("#lbname" + i).html(scoreArr[m]);
-				$("#lbscore" + i).html(nameArr[m]);
-				i++;
-			}
-			/*$('#tblLeaderBoard').append(html);*/
-		});
-		</script>
-	</div>
+	$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+    $.each(data, function (index, value) {
 
+	$("#abcd").html(value.name);
+	
+    });
+ $('#tblLeaderBoard').append(html);
+});
+		</script>
+		
+	</div>
+<!-- end of leader board -->
 
 
 <script type = "text/paperscript" canvas = "braingame">
@@ -231,13 +185,9 @@ var ruleColourNegMax = 2;				// Max number of must-not-have-this-colour rules
 var gameOverFontColour = "red";
 var gameOverFontSize = 180;				// Font-size in pixels
 var gameOverFont = "arial";
-// var gameOverY = (canvas.height - gameOverFontSize) / 2 + gameOverFontSize;
-var gameOverY = 1.5 * gameOverFontSize;
+var gameOverY = (canvas.height - gameOverFontSize) / 2 + gameOverFontSize;
 var gameOverLineColour = "#ff9999";
 var gameOverLineWidth = 3;
-var lbFontSize = 50;					// Leaderboard font size
-var lbLineWidth = 1;					// Leaderboard font stroke width	
-
 // Bad decision
 var badWords = ["Bad!", "Oops!", "NO!", "OMG", "Huh", "Stahp", "Ugh", "Oh no!"];
 var badCurrentWord = "bad";				// The current active badword
@@ -271,36 +221,28 @@ var goodPaper;							// Paper.js obj for 'good' text
 var gameEnd = false;
 
 //VOLUME SLIDER
-$(function() {
-    // setup master volume
-    $( "#master" ).slider({
-      value: 100,
-      orientation: "horizontal",
-      range: "min",
-      animate: true,
-	  slide: function(event,ui) {
-		background.volume = ui.value * 0.01;
-	  }
-    });
-	$( "#bgm" ).slider({
-      value: 100,
-      orientation: "horizontal",
-      range: "min",
-      animate: true,
-	  slide: function(event,ui) {
-		background.volume = ui.value * 0.01;
-	  }
-    });
-	$( "#sfx" ).slider({
-      value: 100,
-      orientation: "horizontal",
-      range: "min",
-      animate: true,
-	  slide: function(event,ui) {
-		
-	  }
-    });
+$(function(){
+  $('#bgmslide').slider({ 
+    max: 100,
+    min: 0,
+    value: 100,
+    slide: function(e,ui) {
+      $('#bgmval').html(ui.value);	  //displays the current value as text to span id currentval
+		background.volume = ui.value * 0.01;	//adjusts volume
+	}
   });
+  $('#sfxslide').slider({ 
+    max: 100,
+    min: 0,
+    value: 100,
+    slide: function(e,ui) {
+      $('#sfxval').html(ui.value);	  //displays the current value as text to span id currentval
+		snd_good.volume = ui.value * 0.01;	//adjusts volume
+		snd_bad.volume = ui.value * 0.01;	//adjusts volume
+		snd_gameover.volume = ui.value * 0.01;	//adjusts volume
+	}
+  });
+});
 
 
 //Canvas resizing
@@ -992,81 +934,23 @@ function ruleBad(bX, bY) {
 function gameOver() {
 	levelScore();
 	var snd_gameover = new Audio("sound/disappointed.mp3");  //game over sound
-	
+	var gameOverText = new PointText({
+		point: [0, gameOverY],
+		content: 'Game Over',
+		fontSize: gameOverFontSize,
+		fontFamily: gameOverFont,
+		fillColor: gameOverFontColour,
+		strokeColor: gameOverLineColour,
+		strokeWidth: gameOverLineWidth
+	});
 	if(gameEnd == false){
-		// Big "Game Over" text
-		var gameOverText = new PointText({
-			point: [0, gameOverY],
-			content: 'Game Over',
-			fontSize: gameOverFontSize,
-			fontFamily: gameOverFont,
-			fillColor: gameOverFontColour,
-			strokeColor: gameOverLineColour,
-			strokeWidth: gameOverLineWidth
-		});
-		gameOverText.point.x = (canvas.width - gameOverText.bounds.width) / 2;
-
 			snd_gameover.play();//game over sound
-			$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
-			  data: JSON.stringify( { "name" : "George" , "score" : score } ),
-			  type: "POST",
-			  contentType: "application/json" } );
 			gameEnd = true;
-			
-			// Ajax query to pull top-scores
-			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-				var i = 0;
-				var scoreArr = [0,0,0,0,0,0,0,0,0,0];
-				var nameArr = ["", "", "", "", "", "", "", "", "", ""];
-				$.each(data, function(index, value){
-					var k = 0;
-					for (k = 0 ; k < scoreArr.length ; k++){
-						if (value.score >= scoreArr[k]){
-							var temp = 0;
-							for ( var z = scoreArr.length-1 ; z > k ; z--){
-								scoreArr[z] = scoreArr[z-1];
-								nameArr[z] = nameArr[z-1];
-							}
-							scoreArr[k] = value.score;
-							nameArr[k] = value.name;
-							k = 10;
-						}
-					}
-				});
-				
-			new PointText({
-				point: [gameOverText.point.x, gameOverY + lbFontSize * 1.5],
-				content: "Top Five:",
-				fontSize: lbFontSize,
-				fontFamily: gameOverFont,
-				fillColor: gameOverFontColour,
-				strokeColor: gameOverLineColour,
-				strokeWidth: lbLineWidth + 1
-			});		
-			
-			var m = 0;
-			for (m = 0 ; m < 5 ; m++){
-				// $("#lbname" + i).html(scoreArr[m]);
-				// $("#lbscore" + i).html(nameArr[m]);
-				new PointText({
-					point: [gameOverText.point.x, gameOverY + 2 * lbFontSize * 1.5 + m * (lbFontSize * 1.5)],
-					content: scoreArr[m] + " - " + nameArr[m],
-					fontSize: lbFontSize,
-					fontFamily: gameOverFont,
-					fillColor: gameOverFontColour,
-					strokeColor: gameOverLineColour,
-					strokeWidth: lbLineWidth
-				});					
-				
-				i++;
-			}
-			/*$('#tblLeaderBoard').append(html);*/
-		});			
-
-	}
+		}
 	document.getElementById('background').pause();
 	document.getElementById('background').currentTime = 0; //stops the music
 	
+	gameOverText.point.x = (canvas.width - gameOverText.bounds.width) / 2;
 }
 function levelScore() {
 levelText.remove();
@@ -1165,7 +1049,154 @@ function setLowVolume() {
 </script>
 <!-- main menu script-->
 <script type = "text/paperscript" canvas = "c">
+//title
+var xPos = 200;
+var yPos = 150;
+var vec_speed = 30;
+var letter_color = 'black';
+var letter_font = ["tahoma"];
+var letter_weight = 'bold';
+var letter_size = 100;
 
+var s_letter1 = new PointText({
+    point: [xPos+letter_size, yPos],
+    content: 'S',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var h_letter = new PointText({
+    point: [xPos+30+letter_size, yPos],
+    content: 'H',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var a_letter1 = new PointText({
+    point: [xPos+65+letter_size, yPos],
+    content: 'A',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var p_letter1 = new PointText({
+    point: [xPos+95, yPos],
+    content: 'P',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var e_letter1 = new PointText({
+    point: [xPos+125, yPos],
+    content: 'E',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var e_letter2 = new PointText({
+    point: [xPos+170, yPos],
+    content: 'E',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var s_letter2 = new PointText({
+    point: [xPos+200, yPos],
+    content: 'S',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var c_letter = new PointText({
+    point: [xPos+230, yPos],
+    content: 'C',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var a_letter2 = new PointText({
+    point: [xPos+265, yPos],
+    content: 'A',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var p_letter2 = new PointText({
+    point: [xPos+300, yPos],
+    content: 'P',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var e_letter3 = new PointText({
+    point: [xPos+330, yPos],
+    content: 'E',
+    fillColor: letter_color,
+    fontFamily: letter_font,
+    fontWeight: letter_weight,
+    fontSize: letter_size
+});
+var letter_s1 = new Group({children: [s_letter1]});
+var dest_s_letter1 = s_letter1.position;
+letter_s1.position = [c.width-1000, c.height+200];
+
+var letter_h = new Group({children: [h_letter]});
+var dest_h_letter = h_letter.position;
+letter_h.position = [c.width-800, c.height+200];
+
+var letter_a1 = new Group({children: [a_letter1]});
+var dest_a_letter1 = a_letter1.position;
+letter_a1.position = [c.width-600, c.height+200];
+
+var letter_p1 = new Group({children: [p_letter1]});
+var dest_p_letter1 = p_letter1.position;
+letter_p1.position = [c.width-400, c.height+200];
+
+var letter_e1 = new Group({children: [e_letter1]});
+var dest_e_letter1 = e_letter1.position;
+letter_e1.position = [c.width-300, c.height+200];
+
+var letter_e2 = new Group({children: [e_letter2]});
+var dest_e_letter2 = e_letter2.position;
+letter_e2.position = [c.width-1000, c.height-1600];
+
+var letter_s2 = new Group({children: [s_letter2]});
+var dest_s_letter2 = s_letter2.position;
+letter_s2.position = [c.width-900, c.height-1600];
+
+var letter_c = new Group({children: [c_letter]});
+var dest_c_letter = c_letter.position;
+letter_c.position = [c.width-800, c.height-1600];
+
+var letter_a2 = new Group({children: [a_letter2]});
+var dest_a_letter2 = a_letter2.position;
+letter_a2.position = [c.width-700, c.height-1600];
+
+var letter_p2 = new Group({children: [p_letter2]});
+var dest_p_letter2 = p_letter2.position;
+letter_p2.position = [c.width-600, c.height-1600];
+
+var letter_e3 = new Group({children: [e_letter3]});
+var dest_e_letter3 = e_letter3.position;
+letter_e3.position = [c.width-500, c.height-1600];
+
+/*	
+function nextFont() {
+	var count = -1;
+    return function() {
+		return letter_font[++count % letter_font.length];
+	}
+}*/
 
 //button positioning
 	var playbutton = document.getElementById('playbtn');
@@ -1206,7 +1237,7 @@ function setLowVolume() {
 	
 	//document.getElementById("c").style.background = 'white';
 	// The amount of circles we want to make:
-	var count = window.innerWidth/15;
+	var count = canvas.width/10;
 
 	// Create a symbol, which we will use to place instances of later:
 	var pathCircle = new Path.Circle({
@@ -1268,166 +1299,6 @@ function setLowVolume() {
 		var placedSymbol = symbol.place(center);
 		placedSymbol.scale(i / count);
 	}
-	
-	//title
-	var xPos = window.innerWidth/4;
-	var yPos = window.innerHeight/4;
-	var vec_speed = 30;
-	var letter_color = 'white';
-	var letter_font = ["tahoma"];
-	var letter_weight = 'bold';
-	var letter_size = 100;
-	var letter_scale = 2;
-	var s_letter1 = new PointText({
-		point: [xPos, yPos],
-		content: 'S',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var h_letter = new PointText({
-		point: [xPos+30*letter_scale, yPos],
-		content: 'H',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var a_letter1 = new PointText({
-		point: [xPos+65*letter_scale, yPos],
-		content: 'A',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var p_letter1 = new PointText({
-		point: [xPos+95*letter_scale, yPos],
-		content: 'P',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var e_letter1 = new PointText({
-		point: [xPos+125*letter_scale, yPos],
-		content: 'E',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var e_letter2 = new PointText({
-		point: [xPos+170*letter_scale, yPos],
-		content: 'E',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var s_letter2 = new PointText({
-		point: [xPos+200*letter_scale, yPos],
-		content: 'S',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var c_letter = new PointText({
-		point: [xPos+230*letter_scale, yPos],
-		content: 'C',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var a_letter2 = new PointText({
-		point: [xPos+265*letter_scale, yPos],
-		content: 'A',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var p_letter2 = new PointText({
-		point: [xPos+300*letter_scale, yPos],
-		content: 'P',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var e_letter3 = new PointText({
-		point: [xPos+330*letter_scale, yPos],
-		content: 'E',
-		fillColor: letter_color,
-		fontFamily: letter_font,
-		fontWeight: letter_weight,
-		fontSize: letter_size,
-		scale: letter_scale
-	});
-	var letter_s1 = new Group({children: [s_letter1]});
-	var dest_s_letter1 = s_letter1.position;
-	letter_s1.position = [c.width-1000, c.height+200];
-
-	var letter_h = new Group({children: [h_letter]});
-	var dest_h_letter = h_letter.position;
-	letter_h.position = [c.width-800, c.height+200];
-
-	var letter_a1 = new Group({children: [a_letter1]});
-	var dest_a_letter1 = a_letter1.position;
-	letter_a1.position = [c.width-600, c.height+200];
-
-	var letter_p1 = new Group({children: [p_letter1]});
-	var dest_p_letter1 = p_letter1.position;
-	letter_p1.position = [c.width-400, c.height+200];
-
-	var letter_e1 = new Group({children: [e_letter1]});
-	var dest_e_letter1 = e_letter1.position;
-	letter_e1.position = [c.width-300, c.height+200];
-
-	var letter_e2 = new Group({children: [e_letter2]});
-	var dest_e_letter2 = e_letter2.position;
-	letter_e2.position = [c.width-1000, c.height-1600];
-
-	var letter_s2 = new Group({children: [s_letter2]});
-	var dest_s_letter2 = s_letter2.position;
-	letter_s2.position = [c.width-900, c.height-1600];
-
-	var letter_c = new Group({children: [c_letter]});
-	var dest_c_letter = c_letter.position;
-	letter_c.position = [c.width-800, c.height-1600];
-
-	var letter_a2 = new Group({children: [a_letter2]});
-	var dest_a_letter2 = a_letter2.position;
-	letter_a2.position = [c.width-700, c.height-1600];
-
-	var letter_p2 = new Group({children: [p_letter2]});
-	var dest_p_letter2 = p_letter2.position;
-	letter_p2.position = [c.width-600, c.height-1600];
-
-	var letter_e3 = new Group({children: [e_letter3]});
-	var dest_e_letter3 = e_letter3.position;
-	letter_e3.position = [c.width-500, c.height-1600];
-
-	/*	
-	function nextFont() {
-		var count = -1;
-		return function() {
-			return letter_font[++count % letter_font.length];
-		}
-	}*/
 
 	// The onFrame function is called up to 60 times a second:
 	function onFrame(event) {
