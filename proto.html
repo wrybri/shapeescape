@@ -77,19 +77,54 @@
 	
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back">Go Back</a>
-		
-		<div id="lbname">renan</div>
-		<div id="lbscore">0</div>
+		<div id="lbname0">renan</div>
+		<div id="lbscore0">0</div>
+		<div id="lbname1"></div>
+		<div id="lbscore1"></div>
+		<div id="lbname2"></div>
+		<div id="lbscore2"></div>
+		<div id="lbname3"></div>
+		<div id="lbscore3"></div>
+		<div id="lbname4"></div>
+		<div id="lbscore4"></div>
+		<div id="lbname5"></div>
+		<div id="lbscore5"></div>
+		<div id="lbname6"></div>
+		<div id="lbscore6"></div>
+		<div id="lbname7"></div>
+		<div id="lbscore7"></div>
+		<div id="lbname8"></div>
+		<div id="lbscore8"></div>
+		<div id="lbname9"></div>
+		<div id="lbscore9"></div>
 		<script>
 		
 		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-			$.each(data, function (index, value) {
-
-			$("#lbname").html(value.name);
-			$("#lbscore").html(value.score);
-			
+			var i = 0;
+			var scoreArr = [0,0,0,0,0,0,0,0,0,0];
+			var nameArr = ["", "", "", "", "", "", "", "", "", ""];
+			$.each(data, function(index, value){
+				var k = 0;
+				for (k = 0 ; k < scoreArr.length ; k++){
+					if (value.score >= scoreArr[k]){
+						var temp = 0;
+						for ( var z = scoreArr.length-1 ; z > k ; z--){
+							scoreArr[z] = scoreArr[z-1];
+							nameArr[z] = nameArr[z-1];
+						}
+						scoreArr[k] = value.score;
+						nameArr[k] = value.name;
+						k = 10;
+					}
+				}
 			});
-		 $('#tblLeaderBoard').append(html);
+			var m = 0;
+			for (m = 0 ; m < 10 ; m++){
+				$("#lbname" + i).html(scoreArr[m]);
+				$("#lbscore" + i).html(nameArr[m]);
+				i++;
+			}
+			/*$('#tblLeaderBoard').append(html);*/
 		});
 		</script>
 	</div>
