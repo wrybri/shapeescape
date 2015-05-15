@@ -13,3 +13,11 @@ html, body {
 #eq > span {
     height:120px; float:left; margin:15px
   }
+  
+#teamlogo {
+	position: absolute;
+	width: 480px;
+	height: 360px;
+	bottom: 0px;
+	margin: 0;
+}
