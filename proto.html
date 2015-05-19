@@ -43,6 +43,14 @@
 			<a href="#options"><img src="pngBtns/pauseBtn.png" id="pausebtn" /></a>
 		</div>
 		</audio>
+		<script>
+		// This function has to go in a separate script on this page due to the wacky way the Paper.JS
+		// script has its own namespace. (therefore html elements can't call functions within it)  -Bri 
+		function setLowVolume() {
+			var myAudio = document.getElementById("background");  
+			myAudio.volume = 1.0; //Changed this to 0.5 or 50% volume since the function is called Set Half Volume ;)
+		}
+		</script>
 	</div>
 	
 	<div data-role="page" id="options">
@@ -151,6 +159,7 @@ var DEBUG3 = false;						// Debug3 (rules)
 var DEBUG4 = false;						// Debug4 (3d mobs array)
 var DEBUG5 = false;						// Debug5 (mobPause)
 var DEBUG6 = false;						// Debug6 (Paper.js integration)
+var DEBUG7 = false;						// Debug7 (game enhancement)
 var memo = document.getElementById("memo");		// Text-box to display debug info
 var memo2 = document.getElementById("memo2");		// Text-box#2 to display debug info
 var memo3 = document.getElementById("memo3");		// Text-box#3 to display debug info
@@ -385,7 +394,7 @@ var strikesText = new PointText({
 // Paper.js - Draw immobile fence pieces
 new Path.Rectangle({
 	point: [gateX - fenceWidth/2, 0 + barHeight],
-	size: [fenceWidth, (canvas.height - gateLength) / 2 ],
+	size: [fenceWidth, (canvas.height - gateLength) / 2 - barHeight ],
 	strokeColor: gateStrokeColour,
 	fillColor: gateColour
 });
@@ -396,7 +405,7 @@ new Path.Rectangle({
 	fillColor: gateColour
 });
 // Paper.js - Draw movable gate pieces in initial positions
-var topHinge = new Point(gateX + gateWidth/2, (canvas.height - gateLength) / 2 + barHeight);
+var topHinge = new Point(gateX + gateWidth/2, (canvas.height - gateLength) / 2);
 var bottomHinge = new Point(gateX + gateWidth/2, canvas.height - (canvas.height - gateLength) / 2);
 // Top
 var topGate = new Path.Rectangle({
@@ -446,106 +455,53 @@ function onFrame(event) {
 		mobPauseTimestamp = null;
 	}
 	
+	
+	if (DEBUG3) {
+	memo3.innerHTML = "mobCount = " + mobCount + "<br>\n";
+	}
+	// Add a new rule
+	// [0] rule type 0=shape 1=colour  [1] 0=regular rule 1=NOT rule  [2] shape-type (0-2 just like mobs array)
+	// [3] colour ie #ff0000  [4] Array of Paper.js shape objects (1 shape and optionally 1 'not' symbol)
+	if (rules.length == 0 || (mobPause == 1 && mobs.length == 0)) {
+		if (DEBUG6) console.log('Add a new rule');
+		// Update level
+		level = Math.floor(mobCount / rulesDuration) + 1;
+		levelScore();	// Refresh level & score
+		if (rules.length > 0 ) {
+			mobPauseTimestamp = progress;
+			mobPause = 2;
+			if (DEBUG5) memo5.innerHTML += "mobPause = 2<br>\n";
+			}
+		if (rules.length == rulesMax) {
+			newRule();			// Doing it in this order prevents the same rule from being re-inserted
+			paperDealloc(rules[0][4]);
+			rules.shift();		// Delete the oldest rule
+		} else {
+			newRule();
+		}
+		if (DEBUG3) {
+		memo3.innerHTML += "Rule added<br>\n";
+		memo3.innerHTML += rules.length + " rules.<br>\n";
+		}
+		if (rules.length >= 2) { // Increase min mobgroup size when there's more than 1 rule
+			minMobs = 2;
+		}
+		// Paper.js - redraw rules
+		drawRuleSetPaper();
+	}
+	
+	
 	// Create new mobs
 	if (mobPause == 0 && (mobs.length == 0 || 
 			(mobs.length > 0 && progress - mobs[mobs.length-1][0][6] > mobFrequency * 1000))) {
 		if (DEBUG4) memo4.innerHTML = "Creating new mobgroup:\n<br>";
-		var r;
-		var g;
-		var b;
-		var fillStyle;
-		var strokeStyle;
-		var numNewMobs = Math.floor(Math.random() * (maxMobs - minMobs + 1)) + minMobs;
-		// mobGroupHeight is the distance from the centre of top mob to centre of bottom mob
-		var mobGroupHeight = (numNewMobs - 1) * (mobYSpacing + 2 * mobMasterRadius);
-		// memo.innerHTML = "";
-		var mobGroup = [];			// Array of mobs for insertion into master 3d mobs array
-		mobCount++;
-		
-		for (var looper = 0 ; looper < numNewMobs ; looper++ ) {
-			if (DEBUG4) memo4.innerHTML += "Mob " + looper + "\n<br>";
-			var mobShapeType = Math.floor(Math.random() * mobShapes);
-			var originYInit = originY - mobGroupHeight / 2 + looper * (2 * mobMasterRadius + mobYSpacing);
-			//Generate colours for fill style and line style
-			/*
-			r = Math.floor(Math.random() * 2);
-			g = Math.floor(Math.random() * 2);
-			b = Math.floor(Math.random() * 2);			
-			fillStyle = "#" + (r?"ff":"00") + (g?"ff":"00") + (b?"ff":"00");
-			strokeStyle = "#" + (r?"cc":"66") + (g?"cc":"66") + (b?"cc":"66");
-			// Make pure-white into an off-white
-			if (fillStyle == "#ffffff") {
-				fillStyle = "#eeeeee";
-				strokeStyle = "#cccccc";
-			}
-			*/
-			var mobColourIndex = Math.floor(Math.random() * mobFills.length);
-			fillStyle = mobFills[mobColourIndex];
-			strokeStyle = mobStrokes[mobColourIndex];
-			
-			// Paper.JS
-			if (mobShapeType == 0) { 	// Circle
-				var mobPaper = new Path.Circle({
-					center: [originX, originYInit],
-					radius: mobMasterRadius,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 1) { // Triangle
-				var mobPaper = new Path.RegularPolygon({
-					center: [originX, originYInit],
-					sides: 3,
-					radius: mobMasterRadius / Math.cos(Math.PI / 6),
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 2) { // Square
-				var mobPaper = new Path.Rectangle({
-					rectangle: new Rectangle(originX - mobMasterRadius, originYInit - mobMasterRadius, 2 * mobMasterRadius, 2 * mobMasterRadius),
-					center: [originX, originYInit],
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 3) { // Pentagon
-				var mobPaper = new Path.RegularPolygon({
-					center: [originX, originYInit],
-					sides: 5,
-					radius: mobMasterRadius,
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 4) { // Star
-				var mobPaper = new Path.Star({
-					center: [originX, originYInit],
-					radius1: mobMasterRadius,
-					radius2: mobMasterRadius/2,
-					points: mobStarPoints,
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			}
-			
-			// Set-up colour gradient on new shape object
-			mobPaper.fillColor = {
-					gradient: {
-						stops: [[fillStyle, 0.05], [fillStyle, 0.2], [strokeStyle, 1]],
-						radial: true
-					},
-					origin: mobPaper.position,
-					destination: mobPaper.bounds.rightCenter
-				};
-				
-			// Insert new mob into array (1 shape)
-			mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
-			
-		}
-		// Insert new mob group into master mobs array
 		if (DEBUG4) memo4.innerHTML += "mobGroup.length: " + mobGroup.length + "\n<br>";
-		mobs.push(mobGroup);
+		
+		// Decide whether the new mob group will comply with current rules or not (50/50 chance)
+		var mobCompliant = makeMobGroup(Math.floor(Math.random() * 2) == 1 ? true : false);
+		
+		// Insert new mob group into master mobs array
+		mobs.push(mobCompliant);
 		if (DEBUG4) memo4.innerHTML += "mobs.length: " + mobs.length + "\n<br>";
 		
 		// Display mob debug info
@@ -631,40 +587,6 @@ function onFrame(event) {
 	topGate.rotate((-paperGateAngle / (2 * Math.PI)) * 360, topHinge);
 	bottomGate.rotate((paperGateAngle / (2 * Math.PI)) * 360, bottomHinge);
 	
-	if (DEBUG3) {
-	memo3.innerHTML = "mobCount = " + mobCount + "<br>\n";
-	}
-	// Add a new rule
-	// [0] rule type 0=shape 1=colour  [1] 0=regular rule 1=NOT rule  [2] shape-type (0-2 just like mobs array)
-	// [3] colour ie #ff0000  [4] Array of Paper.js shape objects (1 shape and optionally 1 'not' symbol)
-	if (rules.length == 0 || (mobPause == 1 && mobs.length == 0)) {
-		if (DEBUG6) console.log('Add a new rule');
-		// Update level
-		level = Math.floor(mobCount / rulesDuration) + 1;
-		levelScore();	// Refresh level & score
-		if (rules.length > 0 ) {
-			mobPauseTimestamp = progress;
-			mobPause = 2;
-			if (DEBUG5) memo5.innerHTML += "mobPause = 2<br>\n";
-			}
-		if (rules.length == rulesMax) {
-			newRule();			// Doing it in this order prevents the same rule from being re-inserted
-			paperDealloc(rules[0][4]);
-			rules.shift();		// Delete the oldest rule
-		} else {
-			newRule();
-		}
-		if (DEBUG3) {
-		memo3.innerHTML += "Rule added<br>\n";
-		memo3.innerHTML += rules.length + " rules.<br>\n";
-		}
-		if (rules.length >= 2) { // Increase min mobgroup size when there's more than 1 rule
-			minMobs = 2;
-		}
-		// Paper.js - redraw rules
-		drawRuleSetPaper();
-	}
-	
 	// Draw any active 'bad' events
 	if (badFlag) {
 		ruleBad();
@@ -709,6 +631,154 @@ function onFrame(event) {
 		gameOver();
 	}
 }
+
+
+// Make a new random mob-group that either complies or breaks the current rules, determined by
+// boolean argument. TRUE = complies with rules, FALSE = breaks rules
+function makeMobGroup(complies) {
+		if (DEBUG7) console.log("makeMobGroup() - complies: " + complies + "\n");
+		var r;
+		var g;
+		var b;
+		var fillStyle;
+		var strokeStyle;
+		
+		var numNewMobs = Math.floor(Math.random() * (maxMobs - minMobs + 1)) + minMobs;
+		// mobGroupHeight is the distance from the centre of top mob to centre of bottom mob
+		var mobGroupHeight = (numNewMobs - 1) * (mobYSpacing + 2 * mobMasterRadius);
+		// memo.innerHTML = "";
+		var mobGroup = [];			// Array of mobs for insertion into master 3d mobs array
+		mobCount++;
+		
+		var looper = 0
+		while (mobGroup.length < numNewMobs) {
+			if (DEBUG4) memo4.innerHTML += "Mob " + looper + "\n<br>";
+			var mobShapeType = Math.floor(Math.random() * mobShapes);
+			var originYInit = originY - mobGroupHeight / 2 + looper * (2 * mobMasterRadius + mobYSpacing);
+
+			var mobColourIndex = Math.floor(Math.random() * mobFills.length);
+			fillStyle = mobFills[mobColourIndex];
+			strokeStyle = mobStrokes[mobColourIndex];
+			
+			// Paper.JS
+			if (mobShapeType == 0) { 	// Circle
+				var mobPaper = new Path.Circle({
+					center: [originX, originYInit],
+					radius: mobMasterRadius,
+					strokeColor: strokeStyle,
+					strokeWidth: mobStrokeWidth
+				});
+			} else if (mobShapeType == 1) { // Triangle
+				var mobPaper = new Path.RegularPolygon({
+					center: [originX, originYInit],
+					sides: 3,
+					radius: mobMasterRadius / Math.cos(Math.PI / 6),
+					fillColor: fillStyle,
+					strokeColor: strokeStyle,
+					strokeWidth: mobStrokeWidth
+				});
+			} else if (mobShapeType == 2) { // Square
+				var mobPaper = new Path.Rectangle({
+					rectangle: new Rectangle(originX - mobMasterRadius, originYInit - mobMasterRadius, 2 * mobMasterRadius, 2 * mobMasterRadius),
+					center: [originX, originYInit],
+					fillColor: fillStyle,
+					strokeColor: strokeStyle,
+					strokeWidth: mobStrokeWidth
+				});
+			} else if (mobShapeType == 3) { // Pentagon
+				var mobPaper = new Path.RegularPolygon({
+					center: [originX, originYInit],
+					sides: 5,
+					radius: mobMasterRadius,
+					fillColor: fillStyle,
+					strokeColor: strokeStyle,
+					strokeWidth: mobStrokeWidth
+				});
+			} else if (mobShapeType == 4) { // Star
+				var mobPaper = new Path.Star({
+					center: [originX, originYInit],
+					radius1: mobMasterRadius,
+					radius2: mobMasterRadius/2,
+					points: mobStarPoints,
+					fillColor: fillStyle,
+					strokeColor: strokeStyle,
+					strokeWidth: mobStrokeWidth
+				});
+			}
+			
+			// Set-up colour gradient on new shape object
+			mobPaper.fillColor = {
+					gradient: {
+						stops: [[fillStyle, 0.05], [fillStyle, 0.2], [strokeStyle, 1]],
+						radial: true
+					},
+					origin: mobPaper.position,
+					destination: mobPaper.bounds.rightCenter
+				};
+				
+			// Insert new mob into array (1 shape)
+			mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
+			
+			// If the newest shape added to the group makes the group non-compliant with
+			// the desired outcome (specified by parameter) re-roll it.
+			if (checkRule(mobGroup) != complies) {
+				if (DEBUG7) console.log("complies: \n" + complies);
+				mobGroup.pop();
+				mobPaper.remove();
+			} else {
+				looper++;
+			}
+			
+		}
+	return mobGroup;
+}
+
+
+// Checks a mobGroup (array) to see if it complies with the current rules.
+// Returns TRUE if group complies with all rules, FALSE otherwise.
+function checkRule(deadGroup) {
+	var ruleFlags = new Array(rules.length);
+	if (DEBUG7) {
+		console.log("checkRule(): rules0 - " + rules[0] + ", mob0 - " + deadGroup[0] + "\n");
+		
+	}
+	
+	// Loop through all rule/mob combinations for the passed mob-group
+	for (var rlooper = 0 ; rlooper < rules.length ; rlooper++) {
+		for (var mlooper = 0 ; mlooper < deadGroup.length ; mlooper++ ) {
+			if (rules[rlooper][1] == 0) {								// "Must-Have" rule
+				if (rules[rlooper][0] == 0) {  		// Shape rule
+					if (rules[rlooper][2] == deadGroup[mlooper][2]) {
+						ruleFlags[rlooper] = true;
+					}
+				} else if (rules[rlooper][0] == 1) {	// Colour rule
+					if (rules[rlooper][3] == deadGroup[mlooper][4]) {
+						ruleFlags[rlooper] = true;
+					}
+				}
+			} else {													// "NOT" rule
+				if (rules[rlooper][0] == 0) {  		// Shape rule
+					if (rules[rlooper][2] == deadGroup[mlooper][2]) {
+						return false;
+					}
+				} else if (rules[rlooper][0] == 1) {	// Colour rule
+					if (rules[rlooper][3] == deadGroup[mlooper][4]) {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	// Check to see if all "Must-Have" rules were met
+	for (var looper = 0 ; looper < ruleFlags.length ; looper++ ) {
+		if (ruleFlags[looper] != true && rules[looper][1] == 0) {
+			return false;
+		}
+	}
+	return true;	
+}
+
+
 // Paper.js needs its own "draw rules" functions b/c it doesn't need to draw them per frame
 function drawRuleSetPaper() {
 	if (DEBUG6) console.log('drawRuleSetPaper()');
@@ -870,43 +940,8 @@ function drawPaperRule(rType, rX, rY) {
 	mobPaper.sendToBack();
 	return mobPaper;
 }
-function checkRule(deadGroup) {
-	var ruleFlags = new Array(rules.length);
-	
-	// Loop through all rule/mob combinations for the passed mob-group
-	for (var rlooper = 0 ; rlooper < rules.length ; rlooper++) {
-		for (var mlooper = 0 ; mlooper < deadGroup.length ; mlooper++ ) {
-			if (rules[rlooper][1] == 0) {								// "Must-Have" rule
-				if (rules[rlooper][0] == 0) {  		// Shape rule
-					if (rules[rlooper][2] == deadGroup[mlooper][2]) {
-						ruleFlags[rlooper] = true;
-					}
-				} else if (rules[rlooper][0] == 1) {	// Colour rule
-					if (rules[rlooper][3] == deadGroup[mlooper][4]) {
-						ruleFlags[rlooper] = true;
-					}
-				}
-			} else {													// "NOT" rule
-				if (rules[rlooper][0] == 0) {  		// Shape rule
-					if (rules[rlooper][2] == deadGroup[mlooper][2]) {
-						return false;
-					}
-				} else if (rules[rlooper][0] == 1) {	// Colour rule
-					if (rules[rlooper][3] == deadGroup[mlooper][4]) {
-						return false;
-					}
-				}
-			}
-		}
-	}
-	// Check to see if all "Must-Have" rules were met
-	for (var looper = 0 ; looper < ruleFlags.length ; looper++ ) {
-		if (ruleFlags[looper] != true && rules[looper][1] == 0) {
-			return false;
-		}
-	}
-	return true;	
-}
+
+
 // Draw an animated "good" message on screen for misses
 function ruleGood(bX, bY) {
 	levelScore();
@@ -1158,10 +1193,6 @@ function checkRuleContradiction(nR) {
 	return false;
 }
 
-function setLowVolume() {
-    var myAudio = document.getElementById("background");  
-    myAudio.volume = 1.0; //Changed this to 0.5 or 50% volume since the function is called Set Half Volume ;)
-}
 
 </script>
 <!-- main menu script-->
@@ -1506,6 +1537,8 @@ function setLowVolume() {
 		letter_p2.fillColor = new Color(Math.random(), Math.random(), Math.random());
 		letter_e3.fillColor = new Color(Math.random(), Math.random(), Math.random());
 	}
+	
+
 	
 	
 </script>
