@@ -306,7 +306,9 @@ var gameEnd = false;
 
 // Achievements
 var scoreStreak = 0;
-var achScore = 4;						// Threshold for 'Score' achievement
+var achStreak = 5;						// Threshold for 'Streak' achievement
+var achScore = 15;						// Threshold for 'Score' achievement
+var achLevel = 2;						// Threshold for 'Level' achievement
 var username = null;
 var userpass = null;
 var achCurrent; 						// The current active Achievement event
@@ -320,7 +322,7 @@ var achFontColour = "255,255,0";		// Font colour in comma-separated RGB
 var achPaperColour = '#000000';			// Font colour for Paper.js
 var achPaper;							// Paper.js obj for 'ach' text
 var achMax = 1;							// Max number of achievements
-var achFlags = new Array(achMax);		// Flags for achievements being completed
+var achStates = new Array(achMax);		// Flags for achievements being completed
 
 //VOLUME SLIDER
 $(function() {
@@ -561,6 +563,12 @@ function onFrame(event) {
 		// Update level
 		level = Math.floor(mobCount / rulesDuration) + 1;
 		levelScore();	// Refresh level & score
+		
+		// Kick off level achievement if conditions met
+		if (!achStates[2] && !achFlag && level == achLevel) {
+			achieveInit(2);
+		}
+		
 		if (rules.length > 0 ) {
 			mobPauseTimestamp = progress;
 			mobPause = 2;
@@ -823,19 +831,8 @@ function makeMobGroup(complies) {
 					
 				// Insert new mob into array (1 shape)
 				mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
-			
-				// If the newest shape added to the group makes the group non-compliant with
-				// the desired outcome (specified by parameter) re-roll it.
-				/*
-				if (checkRule(mobGroup) != complies) {
-					if (DEBUG7) console.log("complies: \n" + complies);
-					mobGroup.pop();
-					mobPaper.remove();
-				} else {
-					looper++;
-				}
-				*/
 			}
+		// If new mob-group doesn't have the desired rule-compliance, re-roll it
 		} while (checkRule(mobGroup) != complies);
 		
 	return mobGroup;
@@ -1071,9 +1068,11 @@ function ruleGood(bX, bY) {
 		snd_good.play(); //"Good" choices
 		
 		// Kick-off a new score-streak achievement
-		if (!achFlags[0] && ++scoreStreak == achScore) {
-			achieveInit("Score");
-		}
+		if (!achStates[0] && ++scoreStreak >= achStreak) {
+			achieveInit(0);
+		} else if (!achStates[1] && score >= achScore) {
+			achieveInit(1);
+		} // Level achievement is kicked off in 'rules' section of onFrame()
 		
 		/*if(scoreStreak >= 20) {
 			$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
@@ -1151,16 +1150,21 @@ function ruleBad(bX, bY) {
 
 function achieveInit(aType) {
 	levelScore();
-	var snd_ach = new Audio("sound/foghorn.mp3"); //miss sound
+	var snd_ach = new Audio("sound/foghorn.mp3"); //achievement sound
 
 	if (achFlag == false) {
 		switch (aType) {
-			case "Score":
-				achCurrent = achScore + " - Streak!";
-				achFlags[0] = true;
+			case 0:	// Hit-streak achievement
+				achCurrent = achStreak + " - Streak!";
+				achStates[0] = true;
 				break;
-			case "hiscore":
-				achCurrent = "New High Score!";
+			case 1: // Score achievement
+				achCurrent = score + " Points!";
+				achStates[1] = true;
+				break;
+			case 2: // Level achievement
+				achCurrent = "Level " + level + "!";
+				achStates[2] = true;
 				break;
 		}
 		achFlag = true;
