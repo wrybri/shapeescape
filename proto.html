@@ -54,58 +54,67 @@
 	</div>
 	
 	<div data-role="page" id="options">
-		<a href="#" data-rel="back">Go Back</a>
-		
-		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
-		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
-		  Master volume
-		</p>
-		
-		<div id="master" style="width:260px; margin:15px;"></div>
-		
-		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
-		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
-		  BGM
-		</p>
-		
-		<div id="bgm" style="width:260px; margin:15px;"></div>
-		
-		<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
-		  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
-		  SFX
-		</p>
-		
-		<div id="sfx" style="width:260px; margin:15px;"></div>
-		
-		<img id="teamlogo" src="LOGO_HI_RES.png" />
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<canvas id="shapebg" width=2000 height=2000></canvas>
+		<div class="pagestuff">
+			<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+			  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+			  Master volume
+			</p>
+			
+			<div id="master" style="width:260px; margin:15px;"></div>
+			
+			<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+			  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+			  BGM
+			</p>
+			
+			<div id="bgm" style="width:260px; margin:15px;"></div>
+			
+			<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+			  <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+			  SFX
+			</p>
+			
+			<div id="sfx" style="width:260px; margin:15px;"></div>
+			
+			<img id="teamlogo" src="LOGO_HI_RES.png" />
+		</div>
 	</div>
 	
 	<div data-role="page" id="tutorial">
-		<a href="#" data-rel="back">Go Back</a>
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<canvas id="shapebg2" width=2000 height=2000></canvas>
+		<div class="pagestuff">
+			
+		</div>
 	</div>
 	
 	<div data-role="page" id="leaderboard">
-		<a href="#" data-rel="back">Go Back</a>
-		<p><span id="lbname0">renan</span>
-		<span id="lbscore0">0</span>
-		<p><span id="lbname1"></span>
-		<span id="lbscore1"></span>
-		<p><span id="lbname2"></span>
-		<span id="lbscore2"></span>
-		<p><span id="lbname3"></span>
-		<span id="lbscore3"></span>
-		<p><span id="lbname4"></span>
-		<span id="lbscore4"></span>
-		<p><span id="lbname5"></span>
-		<span id="lbscore5"></span>
-		<p><span id="lbname6"></span>
-		<span id="lbscore6"></span>
-		<p><span id="lbname7"></span>
-		<span id="lbscore7"></span>
-		<p><span id="lbname8"></span>
-		<span id="lbscore8"></span>
-		<p><span id="lbname9"></span>
-		<span id="lbscore9"></span>
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<canvas id="shapebg3" width=2000 height=2000></canvas>
+		<div class="pagestuff">
+			<p><span id="lbname0"></span>
+			<span id="lbscore0"></span>
+			<p><span id="lbname1"></span>
+			<span id="lbscore1"></span>
+			<p><span id="lbname2"></span>
+			<span id="lbscore2"></span>
+			<p><span id="lbname3"></span>
+			<span id="lbscore3"></span>
+			<p><span id="lbname4"></span>
+			<span id="lbscore4"></span>
+			<p><span id="lbname5"></span>
+			<span id="lbscore5"></span>
+			<p><span id="lbname6"></span>
+			<span id="lbscore6"></span>
+			<p><span id="lbname7"></span>
+			<span id="lbscore7"></span>
+			<p><span id="lbname8"></span>
+			<span id="lbscore8"></span>
+			<p><span id="lbname9"></span>
+			<span id="lbscore9"></span>
+		</div>
 		<script>
 		
 		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
@@ -1216,6 +1225,15 @@ function checkRuleContradiction(nR) {
 	optnbutton.style.position = "absolute";
 	optnbutton.style.left = window.innerWidth / 2 - 40;
 	optnbutton.style.top = window.innerHeight / 2 + 219.5;
+	var backbutton = document.getElementsByClassName('backbtns');
+	var i;
+	for(i = 0; i < backbutton.length; i++){
+		var temp = backbutton[i];
+		temp.style.position = "absolute";
+		temp.style.left = 10;
+		temp.style.top = 10;
+	}
+	
 	
 	//button hover functions
 	$(function() {
@@ -1541,6 +1559,288 @@ function checkRuleContradiction(nR) {
 
 	
 	
+</script>
+
+<script type = "text/paperscript" canvas = "shapebg">
+	
+	//main menu resizing
+	var canvas = document.getElementById("shapebg");
+	var ctx = canvas.getContext('2d');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	//document.getElementById("c").style.background = 'white';
+	// The amount of circles we want to make:
+	var count = window.innerWidth/15;
+
+	// Create a symbol, which we will use to place instances of later:
+	var pathCircle = new Path.Circle({
+		center: [0, 0],
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathSquare = new Path.Rectangle({
+		point: [0, 0],
+		size: [35, 35],
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathTriangle = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 3,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathPentagon = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 5,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathStar = new Path.Star({
+		center: [50, 50],
+		points: 5,
+		radius1: 40,
+		radius2: -40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	
+	//var symbol = new Symbol(path);
+
+	// Place the instances of the symbol:
+	for (var i = 0; i < count; i++) {
+		if(i % 2 == 0){
+			var symbol = new Symbol(pathCircle);
+		}
+		if(i % 5 == 0){
+			var symbol = new Symbol(pathSquare);
+		}
+		if(i % 7 == 0){
+			var symbol = new Symbol(pathTriangle);
+		}
+		if(i % 4 == 0){
+			var symbol = new Symbol(pathPentagon);
+		}
+		if(i % 9 == 0){
+			var symbol = new Symbol(pathStar);
+		}
+		// The center position is a random point in the view:
+		var center = Point.random() * screen.width;
+		var placedSymbol = symbol.place(center);
+		placedSymbol.scale(i / count);
+	}
+
+	// The onFrame function is called up to 60 times a second:
+	function onFrame(event) {
+	
+	// Run through the active layer's children list and change
+		// the position of the placed symbols:
+		for (var i = 0; i < count; i++) {
+			var item = project.activeLayer.children[i];
+			
+			// Move the item 1/20th of its width to the right. This way
+			// larger circles move faster than smaller circles:
+			item.position.x += item.bounds.width / 100;
+
+			// If the item has left the view on the right, move it back
+			// to the left:
+			if (item.bounds.left > view.size.width) {
+				item.position.x = -item.bounds.width;
+			}
+		}
+	}
+</script>
+
+<script type = "text/paperscript" canvas = "shapebg2">
+	
+	//main menu resizing
+	var canvas = document.getElementById("shapebg2");
+	var ctx = canvas.getContext('2d');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	//document.getElementById("c").style.background = 'white';
+	// The amount of circles we want to make:
+	var count = window.innerWidth/15;
+
+	// Create a symbol, which we will use to place instances of later:
+	var pathCircle = new Path.Circle({
+		center: [0, 0],
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathSquare = new Path.Rectangle({
+		point: [0, 0],
+		size: [35, 35],
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathTriangle = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 3,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathPentagon = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 5,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathStar = new Path.Star({
+		center: [50, 50],
+		points: 5,
+		radius1: 40,
+		radius2: -40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	
+	//var symbol = new Symbol(path);
+
+	// Place the instances of the symbol:
+	for (var i = 0; i < count; i++) {
+		if(i % 2 == 0){
+			var symbol = new Symbol(pathCircle);
+		}
+		if(i % 5 == 0){
+			var symbol = new Symbol(pathSquare);
+		}
+		if(i % 7 == 0){
+			var symbol = new Symbol(pathTriangle);
+		}
+		if(i % 4 == 0){
+			var symbol = new Symbol(pathPentagon);
+		}
+		if(i % 9 == 0){
+			var symbol = new Symbol(pathStar);
+		}
+		// The center position is a random point in the view:
+		var center = Point.random() * screen.width;
+		var placedSymbol = symbol.place(center);
+		placedSymbol.scale(i / count);
+	}
+
+	// The onFrame function is called up to 60 times a second:
+	function onFrame(event) {
+	
+	// Run through the active layer's children list and change
+		// the position of the placed symbols:
+		for (var i = 0; i < count; i++) {
+			var item = project.activeLayer.children[i];
+			
+			// Move the item 1/20th of its width to the right. This way
+			// larger circles move faster than smaller circles:
+			item.position.x += item.bounds.width / 100;
+
+			// If the item has left the view on the right, move it back
+			// to the left:
+			if (item.bounds.left > view.size.width) {
+				item.position.x = -item.bounds.width;
+			}
+		}
+	}
+</script>
+
+<script type = "text/paperscript" canvas = "shapebg3">
+	
+	//main menu resizing
+	var canvas = document.getElementById("shapebg3");
+	var ctx = canvas.getContext('2d');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	//document.getElementById("c").style.background = 'white';
+	// The amount of circles we want to make:
+	var count = window.innerWidth/15;
+
+	// Create a symbol, which we will use to place instances of later:
+	var pathCircle = new Path.Circle({
+		center: [0, 0],
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathSquare = new Path.Rectangle({
+		point: [0, 0],
+		size: [35, 35],
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathTriangle = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 3,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathPentagon = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 5,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathStar = new Path.Star({
+		center: [50, 50],
+		points: 5,
+		radius1: 40,
+		radius2: -40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	
+	//var symbol = new Symbol(path);
+
+	// Place the instances of the symbol:
+	for (var i = 0; i < count; i++) {
+		if(i % 2 == 0){
+			var symbol = new Symbol(pathCircle);
+		}
+		if(i % 5 == 0){
+			var symbol = new Symbol(pathSquare);
+		}
+		if(i % 7 == 0){
+			var symbol = new Symbol(pathTriangle);
+		}
+		if(i % 4 == 0){
+			var symbol = new Symbol(pathPentagon);
+		}
+		if(i % 9 == 0){
+			var symbol = new Symbol(pathStar);
+		}
+		// The center position is a random point in the view:
+		var center = Point.random() * screen.width;
+		var placedSymbol = symbol.place(center);
+		placedSymbol.scale(i / count);
+	}
+
+	// The onFrame function is called up to 60 times a second:
+	function onFrame(event) {
+	
+	// Run through the active layer's children list and change
+		// the position of the placed symbols:
+		for (var i = 0; i < count; i++) {
+			var item = project.activeLayer.children[i];
+			
+			// Move the item 1/20th of its width to the right. This way
+			// larger circles move faster than smaller circles:
+			item.position.x += item.bounds.width / 100;
+
+			// If the item has left the view on the right, move it back
+			// to the left:
+			if (item.bounds.left > view.size.width) {
+				item.position.x = -item.bounds.width;
+			}
+		}
+	}
 </script>
 
 </body>

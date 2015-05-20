@@ -6,13 +6,19 @@ html, body {
 	position: relative;
 }
 
-#menu {
+#menu, #options, #tutorial, #leaderboard {
 	position: relative;
 }
 
 #eq > span {
     height:120px; float:left; margin:15px
   }
+  
+.pagestuff {
+	position: absolute;
+	top:100;
+	left:10;
+}
   
 #teamlogo {
 	position: absolute;
