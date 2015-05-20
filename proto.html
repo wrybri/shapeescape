@@ -26,6 +26,20 @@
 			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" class="menubtns" id="tutbtn" /></a>
 			<a href="#leaderboard"><img src="pngBtns/LBBtn.png" class="menubtns" id="lbbtn" /></a>
 			<a href="#options"><img src="pngBtns/OptionsBtn.png" class="menubtns" id="optionsbtn" /></a>
+			<a href="#dialog-form" id="create-user"><img src="pngBtns/LoginBtn.png" class="menubtns" id="loginbtn" /></a>
+			<div id="dialog-form" title="Create new user">
+			  <form>
+				<fieldset>
+				  <label for="name">Name</label>
+				  <input type="text" name="name" id="name" value="George Dung" class="text ui-widget-content ui-corner-all">
+				  <label for="password">Password</label>
+				  <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all">
+			 
+				  <!-- form submission with enter key (doesn't work) -->
+				  <!--<input type="submit" tabindex="-1" style="position:absolute; bottom:-1000px">-->
+				</fieldset>
+			  </form>
+			</div>
 		</div>
 	</div>
 	
@@ -78,8 +92,9 @@
 			
 			<div id="sfx" style="width:260px; margin:15px;"></div>
 			
-			<img id="teamlogo" src="LOGO_HI_RES.png" />
+			
 		</div>
+		<img id="teamlogo" src="LOGO_HI_RES.png" />
 	</div>
 	
 	<div data-role="page" id="tutorial">
@@ -288,6 +303,9 @@ var goodFontColour = "0,255,0";			// Font colour in comma-separated RGB
 var goodPaperColour = '#00ff00';		// Font colour for Paper.js
 var goodPaper;							// Paper.js obj for 'good' text
 var gameEnd = false;
+var scoreStreak = 0;
+var username = null;
+var userpass = null;
 
 //VOLUME SLIDER
 $(function() {
@@ -320,6 +338,58 @@ $(function() {
 	  }
     });
   });
+  
+  //user login
+    $(function() {
+		var dialog, form,
+	 
+		  // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+		  name = $( "#name" ),
+		  password = $( "#password" ),
+		  allFields = $( [] ).add( name ).add( password );
+	 
+	 
+		function addUser() {
+			allFields.removeClass( "ui-state-error" );
+			username = name.val();
+			userpass = password.val();
+			dialog.dialog( "close" );
+		}
+	 
+		dialog = $( "#dialog-form" ).dialog({
+		  autoOpen: false,
+		  height: 380,
+		  width: 430,
+		  modal: true,
+		  show: {
+			effect: "blind",
+			duration: 300
+		  },
+		  hide: {
+			effect: "explode",
+			duration: 600
+		  },
+		  buttons: {
+			"Submit": addUser,
+			Cancel: function() {
+			  dialog.dialog( "close" );
+			}
+		  },
+		  close: function() {
+			form[ 0 ].reset();
+			allFields.removeClass( "ui-state-error" );
+		  }
+		});
+	 
+		form = dialog.find( "form" ).on( "submit", function( event ) {
+		  event.preventDefault();
+		  addUser();
+		});
+	 
+		$( "#create-user" ).on( "click", function() {
+		  dialog.dialog( "open" );
+		});
+	});
 
 
 //Canvas resizing
@@ -953,6 +1023,7 @@ function drawPaperRule(rType, rX, rY) {
 
 // Draw an animated "good" message on screen for misses
 function ruleGood(bX, bY) {
+	//scoreStreak++;
 	levelScore();
 	var snd_good = new Audio("sound/chaching.mp3"); // hit sound
 	if (goodFlag == false) {
@@ -969,6 +1040,13 @@ function ruleGood(bX, bY) {
 		goodPaper.fontFamily = goodFont;
 		goodPaper.fillColor = goodPaperColour;
 		snd_good.play(); //"Good" choices
+		
+		/*if(scoreStreak >= 20) {
+			$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
+			  data: JSON.stringify( { "name" : username , "password" : userpass, "achieveReached" : achievenums } ),
+			  type: "POST",
+			  contentType: "application/json" } );
+		}*/
 		
 		// George - put your sound-effect code here for "Good" choices
 		// meh.
@@ -995,6 +1073,7 @@ function ruleGood(bX, bY) {
 }
 // Draw an animated "bad" message on screen for misses
 function ruleBad(bX, bY) {
+	//scoreStreak = 0;
 	levelScore();
 	var snd_bad = new Audio("sound/doh.mp3"); //miss sound
 	//scoreMemo.innerHTML += "Incorrect!!!<br>\n";
@@ -1053,7 +1132,7 @@ function gameOver() {
 
 			snd_gameover.play();//game over sound
 			$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
-			  data: JSON.stringify( { "name" : "George" , "score" : score } ),
+			  data: JSON.stringify( { "name" : username , "score" : score } ),
 			  type: "POST",
 			  contentType: "application/json" } );
 			gameEnd = true;
@@ -1233,6 +1312,10 @@ function checkRuleContradiction(nR) {
 		temp.style.left = 10;
 		temp.style.top = 10;
 	}
+	var userbutton = document.getElementById('create-user');
+	userbutton.style.position = "absolute";
+	userbutton.style.left = window.innerWidth / 2 + 40;
+	userbutton.style.top = window.innerHeight / 2 + 219.5;
 	
 	
 	//button hover functions

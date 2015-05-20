@@ -24,6 +24,6 @@ html, body {
 	position: absolute;
 	width: 480px;
 	height: 360px;
-	bottom: 0px;
-	margin: 0;
+	right:10;
+	bottom:10;
 }
