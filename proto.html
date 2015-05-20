@@ -749,86 +749,95 @@ function makeMobGroup(complies) {
 		var mobGroup = [];			// Array of mobs for insertion into master 3d mobs array
 		mobCount++;
 		
-		var looper = 0
-		while (mobGroup.length < numNewMobs) {
-			if (DEBUG4) memo4.innerHTML += "Mob " + looper + "\n<br>";
-			var mobShapeType = Math.floor(Math.random() * mobShapes);
-			var originYInit = originY - mobGroupHeight / 2 + looper * (2 * mobMasterRadius + mobYSpacing);
+		do {
+			// wipe array and de-allocate its paper shapes from the scene
+			for (var i = 0 ; i < mobGroup.length ; ) {
+				mobGroup[i][7].remove();
+				mobGroup.shift();
+			}
+			
+			for (var looper = 0; looper < numNewMobs ; looper++ ) {
+				if (DEBUG4) memo4.innerHTML += "Mob " + looper + "\n<br>";
+				var mobShapeType = Math.floor(Math.random() * mobShapes);
+				var originYInit = originY - mobGroupHeight / 2 + looper * (2 * mobMasterRadius + mobYSpacing);
 
-			var mobColourIndex = Math.floor(Math.random() * mobFills.length);
-			fillStyle = mobFills[mobColourIndex];
-			strokeStyle = mobStrokes[mobColourIndex];
-			
-			// Paper.JS
-			if (mobShapeType == 0) { 	// Circle
-				var mobPaper = new Path.Circle({
-					center: [originX, originYInit],
-					radius: mobMasterRadius,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 1) { // Triangle
-				var mobPaper = new Path.RegularPolygon({
-					center: [originX, originYInit],
-					sides: 3,
-					radius: mobMasterRadius / Math.cos(Math.PI / 6),
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 2) { // Square
-				var mobPaper = new Path.Rectangle({
-					rectangle: new Rectangle(originX - mobMasterRadius, originYInit - mobMasterRadius, 2 * mobMasterRadius, 2 * mobMasterRadius),
-					center: [originX, originYInit],
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 3) { // Pentagon
-				var mobPaper = new Path.RegularPolygon({
-					center: [originX, originYInit],
-					sides: 5,
-					radius: mobMasterRadius,
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			} else if (mobShapeType == 4) { // Star
-				var mobPaper = new Path.Star({
-					center: [originX, originYInit],
-					radius1: mobMasterRadius,
-					radius2: mobMasterRadius/2,
-					points: mobStarPoints,
-					fillColor: fillStyle,
-					strokeColor: strokeStyle,
-					strokeWidth: mobStrokeWidth
-				});
-			}
-			
-			// Set-up colour gradient on new shape object
-			mobPaper.fillColor = {
-					gradient: {
-						stops: [[fillStyle, 0.05], [fillStyle, 0.2], [strokeStyle, 1]],
-						radial: true
-					},
-					origin: mobPaper.position,
-					destination: mobPaper.bounds.rightCenter
-				};
+				var mobColourIndex = Math.floor(Math.random() * mobFills.length);
+				fillStyle = mobFills[mobColourIndex];
+				strokeStyle = mobStrokes[mobColourIndex];
 				
-			// Insert new mob into array (1 shape)
-			mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
+				// Paper.JS
+				if (mobShapeType == 0) { 	// Circle
+					var mobPaper = new Path.Circle({
+						center: [originX, originYInit],
+						radius: mobMasterRadius,
+						strokeColor: strokeStyle,
+						strokeWidth: mobStrokeWidth
+					});
+				} else if (mobShapeType == 1) { // Triangle
+					var mobPaper = new Path.RegularPolygon({
+						center: [originX, originYInit],
+						sides: 3,
+						radius: mobMasterRadius / Math.cos(Math.PI / 6),
+						fillColor: fillStyle,
+						strokeColor: strokeStyle,
+						strokeWidth: mobStrokeWidth
+					});
+				} else if (mobShapeType == 2) { // Square
+					var mobPaper = new Path.Rectangle({
+						rectangle: new Rectangle(originX - mobMasterRadius, originYInit - mobMasterRadius, 2 * mobMasterRadius, 2 * mobMasterRadius),
+						center: [originX, originYInit],
+						fillColor: fillStyle,
+						strokeColor: strokeStyle,
+						strokeWidth: mobStrokeWidth
+					});
+				} else if (mobShapeType == 3) { // Pentagon
+					var mobPaper = new Path.RegularPolygon({
+						center: [originX, originYInit],
+						sides: 5,
+						radius: mobMasterRadius,
+						fillColor: fillStyle,
+						strokeColor: strokeStyle,
+						strokeWidth: mobStrokeWidth
+					});
+				} else if (mobShapeType == 4) { // Star
+					var mobPaper = new Path.Star({
+						center: [originX, originYInit],
+						radius1: mobMasterRadius,
+						radius2: mobMasterRadius/2,
+						points: mobStarPoints,
+						fillColor: fillStyle,
+						strokeColor: strokeStyle,
+						strokeWidth: mobStrokeWidth
+					});
+				}
+				
+				// Set-up colour gradient on new shape object
+				mobPaper.fillColor = {
+						gradient: {
+							stops: [[fillStyle, 0.05], [fillStyle, 0.2], [strokeStyle, 1]],
+							radial: true
+						},
+						origin: mobPaper.position,
+						destination: mobPaper.bounds.rightCenter
+					};
+					
+				// Insert new mob into array (1 shape)
+				mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
 			
-			// If the newest shape added to the group makes the group non-compliant with
-			// the desired outcome (specified by parameter) re-roll it.
-			if (checkRule(mobGroup) != complies) {
-				if (DEBUG7) console.log("complies: \n" + complies);
-				mobGroup.pop();
-				mobPaper.remove();
-			} else {
-				looper++;
+				// If the newest shape added to the group makes the group non-compliant with
+				// the desired outcome (specified by parameter) re-roll it.
+				/*
+				if (checkRule(mobGroup) != complies) {
+					if (DEBUG7) console.log("complies: \n" + complies);
+					mobGroup.pop();
+					mobPaper.remove();
+				} else {
+					looper++;
+				}
+				*/
 			}
-			
-		}
+		} while (checkRule(mobGroup) != complies);
+		
 	return mobGroup;
 }
 
