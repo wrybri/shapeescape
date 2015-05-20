@@ -303,9 +303,24 @@ var goodFontColour = "0,255,0";			// Font colour in comma-separated RGB
 var goodPaperColour = '#00ff00';		// Font colour for Paper.js
 var goodPaper;							// Paper.js obj for 'good' text
 var gameEnd = false;
+
+// Achievements
 var scoreStreak = 0;
+var achScore = 4;						// Threshold for 'Score' achievement
 var username = null;
 var userpass = null;
+var achCurrent; 						// The current active Achievement event
+var achTimestamp;						// Timestamp for start of 'ach' event
+var achFlag = false;					// Boolean to indicate an active 'ach' event
+var achFont = "comic sans";
+var achFontSizeStart = 80;				// Initial ach font size
+var achFontSizeEnd = 300;				// Ending ach font size
+var achDuration = 5;					// "Achievement" event duration in seconds
+var achFontColour = "255,255,0";		// Font colour in comma-separated RGB
+var achPaperColour = '#000000';			// Font colour for Paper.js
+var achPaper;							// Paper.js obj for 'ach' text
+var achMax = 1;							// Max number of achievements
+var achFlags = new Array(achMax);		// Flags for achievements being completed
 
 //VOLUME SLIDER
 $(function() {
@@ -675,6 +690,11 @@ function onFrame(event) {
 	if (goodFlag) {
 		ruleGood();
 	}
+	
+			// Draw any active achievement events
+	if (achFlag) {
+		achieveInit();
+	}
 			
 	// Remove mobs that make it past gate
 	if (mobs.length > 0 && timestamp - mobs[0][0][6] > (rulesX + mobMasterRadius) / xSpeed * 1000) {
@@ -1041,6 +1061,11 @@ function ruleGood(bX, bY) {
 		goodPaper.fillColor = goodPaperColour;
 		snd_good.play(); //"Good" choices
 		
+		// Kick-off a new score-streak achievement
+		if (!achFlags[0] && ++scoreStreak == achScore) {
+			achieveInit("Score");
+		}
+		
 		/*if(scoreStreak >= 20) {
 			$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
 			  data: JSON.stringify( { "name" : username , "password" : userpass, "achieveReached" : achievenums } ),
@@ -1073,11 +1098,11 @@ function ruleGood(bX, bY) {
 }
 // Draw an animated "bad" message on screen for misses
 function ruleBad(bX, bY) {
-	//scoreStreak = 0;
 	levelScore();
 	var snd_bad = new Audio("sound/doh.mp3"); //miss sound
 	//scoreMemo.innerHTML += "Incorrect!!!<br>\n";
 	if (badFlag == false) {
+		scoreStreak = 0;
 		strikes++;
 		badFlag = true;
 		badTimestamp = progress;
@@ -1113,6 +1138,53 @@ function ruleBad(bX, bY) {
 		badPaper.remove();
 	}
 }
+
+
+function achieveInit(aType) {
+	levelScore();
+	var snd_ach = new Audio("sound/foghorn.mp3"); //miss sound
+
+	if (achFlag == false) {
+		switch (aType) {
+			case "Score":
+				achCurrent = achScore + " - Streak!";
+				achFlags[0] = true;
+				break;
+			case "hiscore":
+				achCurrent = "New High Score!";
+				break;
+		}
+		achFlag = true;
+		achTimestamp = progress;
+		achX = 0;
+		achY = canvas.height;
+		// Paper.js - create PointText object for text event
+		achPaper = new PointText(new Point(achX, achY));
+		achPaper.content = achCurrent;
+		achPaper.fontSize = achFontSizeStart;
+		achPaper.fontFamily = achFont;
+		achPaper.fillColor = achPaperColour;
+		snd_ach.play(); //"Bad" choices		
+	}
+	
+	if (arguments.length == 0) {
+		// No action required
+	}
+	if (achFlag && progress - achTimestamp < achDuration * 1000) {
+		var achFontSize = Math.floor((progress - achTimestamp) / (achDuration * 1000) 
+		* (achFontSizeEnd - achFontSizeStart) + achFontSizeStart);
+		var achAlpha = (achDuration * 1000 - (progress - achTimestamp)) / (achDuration * 1000);
+		// Paper.js - scale & alpha font object
+		achPaper.scaling = achFontSize / achFontSizeStart;
+		achPaper.opacity =  achAlpha;
+		achPaper.point.y = canvas.height;
+		achPaper.point.x = 0;
+	} else if (achFlag && progress - achTimestamp > achDuration * 1000) {
+		achFlag = false;
+		achPaper.remove();
+	}
+}
+
 function gameOver() {
 	levelScore();
 	var snd_gameover = new Audio("sound/disappointed.mp3");  //game over sound
