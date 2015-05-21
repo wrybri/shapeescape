@@ -16,12 +16,36 @@
 
 	<script type="text/javascript" src="paper-full.min.js"></script>
 	
+	<!-- Carousel Slider Library-->
+	<script src="js/jquery.paper-slider.js"></script>
+	<script>
+	$(document).ready(function() {
+    
+    //options available
+	var opts = {
+		speed: 500            //slider speed
+		,timer: 4000          //time between animation
+		,autoSlider: false     //autoslide on/off
+		,hasNav: true         //show prev/next slider button?
+		,pauseOnHover: true   //pause when mouse over ?
+		,navLeftTxt: '<'   //prev button text
+		,navRightTxt: '>'  //next button text
+		,zIndex:20            //z-index  setting
+		,ease: 'linear'       //animation ease setting
+		,beforeAction: function() {/* callback */}
+		,afterAction: function() {/* callback */}
+	}
+	var as = $('#papers').paperSlider(opts)
+
+	})
+</script>
+
 </head>
 <body>
 	
 	<div data-role="page" id="menu">
 		<canvas id="c" width=2000 height=2000></canvas>
-		<div >
+		<div>
 			<a href="#play"><img src="pngBtns/PlayBtn.png" class="menubtns" id="playbtn" /></a>
 			<a href="#tutorial"><img src="pngBtns/TutorialBtn.png" class="menubtns" id="tutbtn" /></a>
 			<a href="#leaderboard"><img src="pngBtns/LBBtn.png" class="menubtns" id="lbbtn" /></a>
@@ -99,14 +123,77 @@
 	
 	<div data-role="page" id="tutorial">
 		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
-		<canvas id="shapebg2" width=2000 height=2000></canvas>
+		<canvas id="shapebg2" width="2000" height="2000"></canvas>
 		<div class="pagestuff">
-			<p>lol</p>
+		<!-- paper slider units wrapper-->
+		<div id="papers">
+		  <!-- one paper slider unit -->
+		  <div>
+			<!-- put any html you want inside this div -->
+			<h1 class="aligncenter">Welcome to the Shape Escape Tutorial!</h1>
+			<p class="aligncenter">
+				The goal of the game is to let (or not let) specific colors and shapes through a gate depending on a randomly generated rule.
+				There are 5 colors (<font color="blue">Blue</font>, <font color="yellow">Yellow</font>, <font color="green">Green</font>, <font color="purple">Purple</font>, <font color="red">Red</font>) and 5 shapes (Triangle, Star, Pentagon, Circle, Square):
+				<br><img src="img/shape.png"/><br/>
+				Clicking on the gate will open it for a couple seconds and repeated clicking on the gate will keep it open.
+			</p>
+		  </div>
+		  <!-- /one paper slider unit -->
+		  <!-- one paper slider unit -->
+		  <div>
+			<h2 class="aligncenter">Basic Rules (No Shape)</h2>
+			<p class="aligncenter">With only one rule, you can allow every shape in except a specified one… 
+			<img src="img/noshape_rule.png" class="tutorialscreen"/>
+			</p>
+		  </div>
+		  <!-- /one paper slider unit -->
+		  <!-- one paper slider unit -->
+		  <div>
+			<h2 class="aligncenter">Basic Rules (Shape)</h2>
+			<p class="aligncenter">
+				…Only allow a certain shape in…<br/>
+				<img src="img/shape_rule.png" class="tutorialscreen"/>
+			</p>
+		  </div>
+		  <!-- /one paper slider unit -->
+		  <!-- one paper slider unit -->
+		  <div>
+			<h2 class="aligncenter">Basic Rules (Color)</h2>
+			<p class="aligncenter">
+			...Only allow a certain color in...<br/>
+				<img src="img/color_rule.png" class="tutorialscreen"/>
+			</p>
+		  </div>
+		  <!-- /one paper slider unit -->
+		  <!-- one paper slider unit -->
+		  <div>
+			<h2 class="aligncenter">Basic Rules (No Color)</h2>
+			<p class="aligncenter">
+			...Or allow all colors except the specified one.<br/>
+				<img src="img/nocolor_rule.png" class="tutorialscreen"/>
+			</p>
+		  </div>
+		  <!-- /one paper slider unit -->
+		  <!-- one paper slider unit -->
+		  <div>
+			<h2 class="aligncenter">More rules</hr>
+			<p class="aligncenter">
+				As you progress through the levels, more rules (up to 3) will appear. In these cases, each group must correspond to each individual rule. In this case, each group must have something <font color="red">red</font>, a star, and no circle:<br/>
+				<img src="img/redstar.png" class="tutorialscreen"/>
+			</p>
+		  </div>
+		  <!-- /one paper slider unit -->
+		</div>
+		<!-- /paper slider units wrapper -->     
 		</div>
 	</div>
 	
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		
 		<canvas id="shapebg3" width=2000 height=2000></canvas>
 		<div class="pagestuff">
 			<p><span id="lbname0"></span>
@@ -184,7 +271,6 @@ var DEBUG4 = false;						// Debug4 (3d mobs array)
 var DEBUG5 = false;						// Debug5 (mobPause)
 var DEBUG6 = false;						// Debug6 (Paper.js integration)
 var DEBUG7 = false;						// Debug7 (game enhancement)
-var DEBUG8 = false; 					// Debug8 (rule compliance fixing)	
 var memo = document.getElementById("memo");		// Text-box to display debug info
 var memo2 = document.getElementById("memo2");		// Text-box#2 to display debug info
 var memo3 = document.getElementById("memo3");		// Text-box#3 to display debug info
@@ -322,10 +408,8 @@ var achDuration = 5;					// "Achievement" event duration in seconds
 var achFontColour = "255,255,0";		// Font colour in comma-separated RGB
 var achPaperColour = '#000000';			// Font colour for Paper.js
 var achPaper;							// Paper.js obj for 'ach' text
-var achMax = 3;							// Max number of achievements
+var achMax = 1;							// Max number of achievements
 var achStates = new Array(achMax);		// Flags for achievements being completed
-var userID = null;
-
 
 //VOLUME SLIDER
 $(function() {
@@ -373,29 +457,9 @@ $(function() {
 			allFields.removeClass( "ui-state-error" );
 			username = name.val();
 			userpass = password.val();
-			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-				$.each(data, function(index, value){
-					userID = value._id["$oid"];
-					achStates = value.achieveReached;
-				});	
-			});
-			setTimeout(function(){if(userID == null) {
-				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
-				  data: JSON.stringify( { "name" : username , "password" : userpass, "achieveReached" : achStates} ),
-				  type: "POST",
-				  contentType: "application/json" }
-				);
-				$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-					$.each(data, function(index, value){
-						userID = value._id["$oid"];
-					});	
-				});
-			}}, 3000);
-			
 			dialog.dialog( "close" );
 		}
-	 //f={"_id": 1} // value._id["$oid"] // q={"name": " + username + ", "password": " + userpass + "} // {"firstName": 1, "lastName": 1} // achStates = value.achieveReached;
-	 //"https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={""name"": " + username + ", ""password"": " + userpass + "}apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ"
+	 
 		dialog = $( "#dialog-form" ).dialog({
 		  autoOpen: false,
 		  height: 380,
@@ -588,7 +652,6 @@ function onFrame(event) {
 		levelScore();	// Refresh level & score
 		
 		// Kick off level achievement if conditions met
-		// (this can also kick off from ruleGood() in the case of simultaneous achievements)
 		if (!achStates[2] && !achFlag && level == achLevel) {
 			achieveInit(2);
 		}
@@ -781,9 +844,7 @@ function makeMobGroup(complies) {
 		var mobGroup = [];			// Array of mobs for insertion into master 3d mobs array
 		mobCount++;
 		
-		var rollAttempts = 0;		// Just for fun, track how many tries to roll compliant group
 		do {
-			++rollAttempts;
 			// wipe array and de-allocate its paper shapes from the scene
 			for (var i = 0 ; i < mobGroup.length ; ) {
 				mobGroup[i][7].remove();
@@ -861,9 +922,6 @@ function makeMobGroup(complies) {
 		// If new mob-group doesn't have the desired rule-compliance, re-roll it
 		} while (checkRule(mobGroup) != complies);
 		
-	if (DEBUG8 && rollAttempts > 2) {
-		console.log(rollAttempts + " roll attempts!");
-	}
 	return mobGroup;
 }
 
@@ -1101,13 +1159,14 @@ function ruleGood(bX, bY) {
 			achieveInit(0);
 		} else if (!achStates[1] && score >= achScore) {
 			achieveInit(1);
-		} else if (!achStates[2] && !achFlag && level == achLevel) {
-			// Level achievement can also be kicked off in 'rules' section of onFrame(), which will only happen in the case of simultaneous achievements
-			achieveInit(2);
-		}
-			
+		} // Level achievement is kicked off in 'rules' section of onFrame()
 		
-		
+		/*if(scoreStreak >= 20) {
+			$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
+			  data: JSON.stringify( { "name" : username , "password" : userpass, "achieveReached" : achievenums } ),
+			  type: "POST",
+			  contentType: "application/json" } );
+		}*/
 		
 		// George - put your sound-effect code here for "Good" choices
 		// meh.
@@ -1185,26 +1244,14 @@ function achieveInit(aType) {
 			case 0:	// Hit-streak achievement
 				achCurrent = achStreak + " - Streak!";
 				achStates[0] = true;
-				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
-				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
-				  type: "PUT",
-				  contentType: "application/json" } );
 				break;
 			case 1: // Score achievement
 				achCurrent = score + " Points!";
 				achStates[1] = true;
-				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
-				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
-				  type: "PUT",
-				  contentType: "application/json" } );
 				break;
 			case 2: // Level achievement
 				achCurrent = "Level " + level + "!";
 				achStates[2] = true;
-				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
-				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
-				  type: "PUT",
-				  contentType: "application/json" } );
 				break;
 		}
 		achFlag = true;
@@ -1435,7 +1482,7 @@ function checkRuleContradiction(nR) {
 		var temp = backbutton[i];
 		temp.style.position = "absolute";
 		temp.style.left = 10;
-		temp.style.bottom = 10;
+		temp.style.top = 10;
 	}
 	var userbutton = document.getElementById('create-user');
 	userbutton.style.position = "absolute";
