@@ -263,27 +263,6 @@
 			<img src="blank.gif" alt="Locked Achievment" id="img1">
 			<img src="blank.gif" alt="Locked Achievment" id="img2">
 		</div>
-		<script>
-			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-
-				var nameArr = ["", "", ""];
-				$.each(data, function(index, value){
-					if (value.name == username && value.password == userpass) {
-						if (value.achieveReached[0] == true)
-							nameArr[0] = "pngBtns/ScoreAchiev.png";
-						if (value.achieveReached[1] == true)
-							nameArr[1] = "pngBtns/StreakAchiev.png";
-						if (value.achieveReached[2] == true)
-							nameArr[2] = "pngBtns/LevelAchiev.png";
-					}
-				});
-				$("#img0").attr("src", nameArr[0]);
-				$("#img1").attr("src", nameArr[1]);
-				$("#img2").attr("src", nameArr[2]);
-				
-				/*$('#tblLeaderBoard').append(html);*/
-			});
-		</script>
 	</div>
 
 	<div data-role="page" id="leaderboard">
@@ -550,6 +529,8 @@ $(function() {
     });
   });
   
+
+			
   //user login
     $(function() {
 		var dialog, form,
@@ -564,6 +545,25 @@ $(function() {
 			allFields.removeClass( "ui-state-error" );
 			username = name.val();
 			userpass = password.val();
+			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+
+				var nameArr = ["", "", ""];
+				$.each(data, function(index, value){
+					if (value.name == username && value.password == userpass) {
+						if (value.achieveReached[0] == true)
+							nameArr[0] = "pngBtns/ScoreAchiev.png";
+						if (value.achieveReached[1] == true)
+							nameArr[1] = "pngBtns/StreakAchiev.png";
+						if (value.achieveReached[2] == true)
+							nameArr[2] = "pngBtns/LevelAchiev.png";
+					}
+				});
+				$("#img0").attr("src", nameArr[0]);
+				$("#img1").attr("src", nameArr[1]);
+				$("#img2").attr("src", nameArr[2]);
+				
+				/*$('#tblLeaderBoard').append(html);*/
+			});
 			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
 				$.each(data, function(index, value){
 					userID = value._id["$oid"];
@@ -620,7 +620,8 @@ $(function() {
 		  dialog.dialog( "open" );
 		});
 	});
-
+	
+	  			
 
 //Canvas resizing
 /*(function() {
@@ -2215,6 +2216,100 @@ function checkRuleContradiction(nR) {
 </script>
 
 <script type = "text/paperscript" canvas = "shapebg3">
+	
+	//main menu resizing
+	var canvas = document.getElementById("shapebg3");
+	var ctx = canvas.getContext('2d');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	//document.getElementById("c").style.background = 'white';
+	// The amount of circles we want to make:
+	var count = window.innerWidth/15;
+
+	// Create a symbol, which we will use to place instances of later:
+	var pathCircle = new Path.Circle({
+		center: [0, 0],
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathSquare = new Path.Rectangle({
+		point: [0, 0],
+		size: [35, 35],
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathTriangle = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 3,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathPentagon = new Path.RegularPolygon({
+		center: [0, 0],
+		sides: 5,
+		radius: 40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	var pathStar = new Path.Star({
+		center: [50, 50],
+		points: 5,
+		radius1: 40,
+		radius2: -40,
+		fillColor: 'black',
+		strokeColor: 'grey'
+	});
+	
+	//var symbol = new Symbol(path);
+
+	// Place the instances of the symbol:
+	for (var i = 0; i < count; i++) {
+		if(i % 2 == 0){
+			var symbol = new Symbol(pathCircle);
+		}
+		if(i % 5 == 0){
+			var symbol = new Symbol(pathSquare);
+		}
+		if(i % 7 == 0){
+			var symbol = new Symbol(pathTriangle);
+		}
+		if(i % 4 == 0){
+			var symbol = new Symbol(pathPentagon);
+		}
+		if(i % 9 == 0){
+			var symbol = new Symbol(pathStar);
+		}
+		// The center position is a random point in the view:
+		var center = Point.random() * screen.width;
+		var placedSymbol = symbol.place(center);
+		placedSymbol.scale(i / count);
+	}
+
+	// The onFrame function is called up to 60 times a second:
+	function onFrame(event) {
+	
+	// Run through the active layer's children list and change
+		// the position of the placed symbols:
+		for (var i = 0; i < count; i++) {
+			var item = project.activeLayer.children[i];
+			
+			// Move the item 1/20th of its width to the right. This way
+			// larger circles move faster than smaller circles:
+			item.position.x += item.bounds.width / 100;
+
+			// If the item has left the view on the right, move it back
+			// to the left:
+			if (item.bounds.left > view.size.width) {
+				item.position.x = -item.bounds.width;
+			}
+		}
+	}
+</script>
+
+<script type = "text/paperscript" canvas = "shapebg4">
 	
 	//main menu resizing
 	var canvas = document.getElementById("shapebg3");
