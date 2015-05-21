@@ -369,7 +369,7 @@ var mobYSpacing = 10;					// Vertical spacing between mobs
 // Time in MS (same unit as start/progress vars) for mob to completely traverse screen
 var mobTransitTime = (canvas.width - originX + mobMasterRadius) / xSpeed * 1000;
 var mobYVariance = 30;					// Pixels of Y oscillation (max)
-var mobOscillations = 2.25;				// Number of complete sin oscillations 'wavy' mobs do, ie sin(0 to 2pi)
+var mobOscillationsMax = 7;				// MAX Number of complete sin oscillations 'wavy' mobs do, ie sin(0 to 2pi)
 var mobFrequency = 1.5;					// Seconds between mob-groups
 var mobPause = 0;						// 0 = mobs not paused. 1 = paused before rule-change. 2 = paused after
 var mobPauseTimestamp = null;			// Timestamp for initiation of a mob-pause
@@ -833,7 +833,7 @@ function onFrame(event) {
 			if (DEBUG4) memo4.innerHTML = "l1: " + looper + "  l2: " + looper2 + " tempMob: " + tempMob + "\n<br>";
 			
 			var mobX = tempMob[0] + (progress - tempMob[6]) / 1000 * xSpeed;  // X refresh		
-			var mobY = tempMob[1] + Math.sin((progress - tempMob[6]) / mobTransitTime * endAngle * mobOscillations) * mobYVariance;
+			var mobY = tempMob[1] + Math.sin((progress - tempMob[6]) / mobTransitTime * endAngle * tempMob[8]) * mobYVariance;
 			// Paper.js
 			var mobPaperObj = tempMob[7];
 			mobPaperObj.position.x = mobX;
@@ -966,6 +966,7 @@ function makeMobGroup(complies) {
 		
 		do {
 			// wipe array and de-allocate its paper shapes from the scene
+			var mobOscillations = mobOscillationsMax * Math.random();
 			for (var i = 0 ; i < mobGroup.length ; ) {
 				mobGroup[i][7].remove();
 				mobGroup.shift();
@@ -1037,7 +1038,7 @@ function makeMobGroup(complies) {
 					};
 					
 				// Insert new mob into array (1 shape)
-				mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper]);
+				mobGroup.push([originX, originYInit, mobShapeType, mobMasterRadius, fillStyle, strokeStyle, progress, mobPaper, mobOscillations]);
 			}
 		// If new mob-group doesn't have the desired rule-compliance, re-roll it
 		} while (checkRule(mobGroup) != complies);
@@ -1452,7 +1453,6 @@ function gameOver() {
 			canvas.height - 40 - gameOverPadding * 2];
 		backButtonPaper.on('click', function() {
 			window.location.assign("#");
-			window.location.reload();
 			});
 		
 			
