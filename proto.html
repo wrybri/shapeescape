@@ -56,7 +56,7 @@
 			  <form>
 				<fieldset>
 				  <label for="name">Name</label>
-				  <input type="text" name="name" id="name" value="George Dung" class="text ui-widget-content ui-corner-all">
+				  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
 				  <label for="password">Password</label>
 				  <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all">
 			 
@@ -255,7 +255,37 @@
 		</div>
 	</div>
 	
-	
+	<div data-role="page" id="achievements">
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		<canvas id="shapebg4" width=2000 height=2000></canvas>
+		<div class="pagestuff">
+			<img src="blank.gif" alt="Locked Achievment" id="img0">
+			<img src="blank.gif" alt="Locked Achievment" id="img1">
+			<img src="blank.gif" alt="Locked Achievment" id="img2">
+		</div>
+		<script>
+			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+
+				var nameArr = ["", "", ""];
+				$.each(data, function(index, value){
+					if (value.name == username && value.password == userpass) {
+						if (value.achieveReached[0] == true)
+							nameArr[0] = "pngBtns/ScoreAchiev.png";
+						if (value.achieveReached[1] == true)
+							nameArr[1] = "pngBtns/StreakAchiev.png";
+						if (value.achieveReached[2] == true)
+							nameArr[2] = "pngBtns/LevelAchiev.png";
+					}
+				});
+				$("#img0").attr("src", nameArr[0]);
+				$("#img1").attr("src", nameArr[1]);
+				$("#img2").attr("src", nameArr[2]);
+				
+				/*$('#tblLeaderBoard').append(html);*/
+			});
+		</script>
+	</div>
+
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
 		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
