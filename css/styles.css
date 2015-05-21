@@ -30,7 +30,7 @@ html, body {
 
 #papers {
   position:relative;
-  margin-left: 2.5em;
+  margin-left: 5em;
   width:900px;
   height:680px;
 }
@@ -52,6 +52,7 @@ html, body {
   top:50%;
   margin-top:-1em;
   border-radius:2em;
+  font-size:2em;
 }
 .ps-nav-prev {
   left:-2.5em;
@@ -66,4 +67,10 @@ html, body {
 .tutorialscreen {
 max-width:700px;
 max-height:500px;
+}
+.tutorialtext {
+padding-left: 25px;
+}
+.aligncenter {
+padding-left: 25px;
 }
