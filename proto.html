@@ -391,8 +391,14 @@ var gateWidth = 10;						// Width of gate in pixels
 var fenceWidth = 15;					// Width of fence (non-moving)
 var gateX = canvas.width - 1.25 * gateLength;	// Gate X position
 var gateGap = 4;						// Gap between gate sections, in pixels(when closed)
-var gateColour = "#000000";				// Colour of gate as CSS colour
+var gateColour = "#313135";				// Colour of gate as CSS colour
+var gateColourTopRight = "#000000";				// Colour of gate top right as CSS colour
+var gateColourTopLeft = "#A2A2B1";				// Colour of gate top left as CSS colour
+var gateColourBotRight = "#000000";				// Colour of gate bot right as CSS colour
+var gateColourBotLeft = "#A2A2B1";				// Colour of gate bot left as CSS colour
+var gateHingeStroke = "##3D1F00";		// Colour of gate hinge outline
 var gateStrokeColour = "#333333";		// Colour of gate outline
+var gateHingeFill = "#332914";		// Colour of gate hinge outline
 var gateTimestamp = null;				// Timestamp for start of gate-open event
 var gateDebug2;							// Var used with DEBUG2 to monitor gateState
 var gatePrevAngle = 0;					// A hacky way to get the gates to work with Paper.js...
@@ -642,6 +648,31 @@ var strikesText = new PointText({
 	
 // Paper.js - Draw immobile fence pieces
 new Path.Rectangle({
+	point: [gateX+5 - fenceWidth/2, 0 + barHeight],
+	size: [fenceWidth, (canvas.height - gateLength) / 2 - barHeight ],
+	strokeColor: gateStrokeColour,
+	fillColor: gateColourTopRight
+});
+new Path.Rectangle({
+	point: [gateX-5 - fenceWidth/2, 0 + barHeight],
+	size: [fenceWidth, (canvas.height - gateLength) / 2 - barHeight ],
+	strokeColor: gateStrokeColour,
+	fillColor: gateColourTopLeft
+});
+
+new Path.Rectangle({
+	point: [gateX+5 - fenceWidth/2, canvas.height - (canvas.height - gateLength) / 2],
+	size: [fenceWidth, (canvas.height - gateLength) / 2],
+	strokeColor: gateStrokeColour,
+	fillColor: gateColourBotRight
+});
+new Path.Rectangle({
+	point: [gateX-5 - fenceWidth/2, canvas.height - (canvas.height - gateLength) / 2],
+	size: [fenceWidth, (canvas.height - gateLength) / 2],
+	strokeColor: gateStrokeColour,
+	fillColor: gateColourBotLeft
+});
+new Path.Rectangle({
 	point: [gateX - fenceWidth/2, 0 + barHeight],
 	size: [fenceWidth, (canvas.height - gateLength) / 2 - barHeight ],
 	strokeColor: gateStrokeColour,
@@ -660,16 +691,16 @@ var bottomHinge = new Point(gateX + gateWidth/2, canvas.height - (canvas.height 
 var topGate = new Path.Rectangle({
 	from: topHinge,
 	to: new Point(gateX - gateWidth/2, topHinge.y + (gateLength - gateGap) / 2),
-	strokeColor: gateStrokeColour,
-	fillColor: gateColour,
+	strokeColor: gateHingeStroke,
+	fillColor: gateHingeFill,
 	center: topHinge
 });
 // Bottom
 var bottomGate = new Path.Rectangle({
 	from: bottomHinge,
 	to: new Point(gateX - gateWidth/2, bottomHinge.y - (gateLength - gateGap) / 2),
-	strokeColor: gateStrokeColour,
-	fillColor: gateColour,
+	strokeColor: gateHingeStroke,
+	fillColor: gateHingeFill,
 	center: bottomHinge
 });
 // Draw 'RULES'
@@ -1521,8 +1552,7 @@ function checkRuleContradiction(nR) {
 
 
 </script>
-<!-- main menu script-->
-<script type = "text/paperscript" canvas = "c">
+<!-- main menu script--><script type = "text/paperscript" canvas = "c">
 
 
 //button positioning
