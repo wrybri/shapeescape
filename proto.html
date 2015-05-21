@@ -51,6 +51,7 @@
 			<a href="#leaderboard"><img src="pngBtns/LBBtn.png" class="menubtns" id="lbbtn" /></a>
 			<a href="#options"><img src="pngBtns/OptionsBtn.png" class="menubtns" id="optionsbtn" /></a>
 			<a href="#dialog-form" id="create-user"><img src="pngBtns/LoginBtn.png" class="menubtns" id="loginbtn" /></a>
+			<a href="#achievements"><img src="pngBtns/AchievBtn.png" class="menubtns" id="achievbtn" /></a>
 			<div id="dialog-form" title="Create new user">
 			  <form>
 				<fieldset>
@@ -253,6 +254,7 @@
 		<!-- /paper slider units wrapper -->     
 		</div>
 	</div>
+	
 	
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
@@ -1662,6 +1664,10 @@ function checkRuleContradiction(nR) {
 	userbutton.style.position = "absolute";
 	userbutton.style.left = window.innerWidth / 2 + 40;
 	userbutton.style.top = window.innerHeight / 2 + 219.5;
+	var achievbutton = document.getElementById('achievbtn');
+	achievbutton.style.position = "absolute";
+	achievbutton.style.left = window.innerWidth / 2 - 120;
+	achievbutton.style.top = window.innerHeight / 2 + 219.5;
 	
 	
 	//button hover functions
