@@ -184,6 +184,7 @@ var DEBUG4 = false;						// Debug4 (3d mobs array)
 var DEBUG5 = false;						// Debug5 (mobPause)
 var DEBUG6 = false;						// Debug6 (Paper.js integration)
 var DEBUG7 = false;						// Debug7 (game enhancement)
+var DEBUG8 = false; 					// Debug8 (rule compliance fixing)	
 var memo = document.getElementById("memo");		// Text-box to display debug info
 var memo2 = document.getElementById("memo2");		// Text-box#2 to display debug info
 var memo3 = document.getElementById("memo3");		// Text-box#3 to display debug info
@@ -587,6 +588,7 @@ function onFrame(event) {
 		levelScore();	// Refresh level & score
 		
 		// Kick off level achievement if conditions met
+		// (this can also kick off from ruleGood() in the case of simultaneous achievements)
 		if (!achStates[2] && !achFlag && level == achLevel) {
 			achieveInit(2);
 		}
@@ -779,7 +781,9 @@ function makeMobGroup(complies) {
 		var mobGroup = [];			// Array of mobs for insertion into master 3d mobs array
 		mobCount++;
 		
+		var rollAttempts = 0;		// Just for fun, track how many tries to roll compliant group
 		do {
+			++rollAttempts;
 			// wipe array and de-allocate its paper shapes from the scene
 			for (var i = 0 ; i < mobGroup.length ; ) {
 				mobGroup[i][7].remove();
@@ -857,6 +861,9 @@ function makeMobGroup(complies) {
 		// If new mob-group doesn't have the desired rule-compliance, re-roll it
 		} while (checkRule(mobGroup) != complies);
 		
+	if (DEBUG8 && rollAttempts > 2) {
+		console.log(rollAttempts + " roll attempts!");
+	}
 	return mobGroup;
 }
 
@@ -1094,7 +1101,11 @@ function ruleGood(bX, bY) {
 			achieveInit(0);
 		} else if (!achStates[1] && score >= achScore) {
 			achieveInit(1);
-		} // Level achievement is kicked off in 'rules' section of onFrame()
+		} else if (!achStates[2] && !achFlag && level == achLevel) {
+			// Level achievement can also be kicked off in 'rules' section of onFrame(), which will only happen in the case of simultaneous achievements
+			achieveInit(2);
+		}
+			
 		
 		
 		
