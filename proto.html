@@ -1445,6 +1445,25 @@ function gameOver() {
 		
 		gameOverText.moveAbove(gameOverBox);
 		
+		// Paper.js is apparently incapable of returning raster.width or raster.bounds.width, (I think it's a glitch in the library) so I had to hard-code the buttons' half-width of 40px  -Bri
+		// var backButton = new Image('pngBtns/BackBtnOver.png');
+		var backButtonPaper = new Raster('pngBtns/BackBtn.png');
+		backButtonPaper.position = [gameOverText.point.x + 40,
+			canvas.height - 40 - gameOverPadding * 2];
+		backButtonPaper.on('click', function() {
+			window.location.assign("#");
+			window.location.reload();
+			});
+		
+			
+		var replayButtonPaper = new Raster('pngBtns/ReplayBtn.png');
+		replayButtonPaper.position = [gameOverText.point.x + 40 + 80 + gameOverPadding,
+			canvas.height - 40 - gameOverPadding * 2];
+		replayButtonPaper.on('click', function() {
+			// window.location.assign("#play");
+			window.location.reload();
+			});
+		
 
 		snd_gameover.play();//game over sound
 		$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
