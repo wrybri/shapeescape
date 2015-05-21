@@ -766,6 +766,7 @@ function onFrame(event) {
 		if (DEBUG6) console.log('Add a new rule');
 		// Update level
 		level = Math.floor(mobCount / rulesDuration) + 1;
+		xSpeed *= Math.pow(1.1, level - 1);
 		levelScore();	// Refresh level & score
 		
 		// Kick off level achievement if conditions met
