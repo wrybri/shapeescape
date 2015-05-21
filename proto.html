@@ -476,6 +476,7 @@ var achPaperColour = '#000000';			// Font colour for Paper.js
 var achPaper;							// Paper.js obj for 'ach' text
 var achMax = 1;							// Max number of achievements
 var achStates = new Array(achMax);		// Flags for achievements being completed
+var userID = null;
 
 //VOLUME SLIDER
 $(function() {
@@ -523,6 +524,26 @@ $(function() {
 			allFields.removeClass( "ui-state-error" );
 			username = name.val();
 			userpass = password.val();
+			$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+				$.each(data, function(index, value){
+					userID = value._id["$oid"];
+					achStates = value.achieveReached;
+				});	
+			});
+			setTimeout(function(){if(userID == null) {
+				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
+				  data: JSON.stringify( { "name" : username , "password" : userpass, "achieveReached" : achStates} ),
+				  type: "POST",
+				  contentType: "application/json" }
+				);
+				setTimeout(function(){$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+					$.each(data, function(index, value){
+						userID = value._id["$oid"];
+						achStates = value.achieveReached;
+					});	
+				});}, 2000);
+			}}, 2000);
+			
 			dialog.dialog( "close" );
 		}
 	 
@@ -546,7 +567,6 @@ $(function() {
 			}
 		  },
 		  close: function() {
-			form[ 0 ].reset();
 			allFields.removeClass( "ui-state-error" );
 		  }
 		});
@@ -1310,14 +1330,26 @@ function achieveInit(aType) {
 			case 0:	// Hit-streak achievement
 				achCurrent = achStreak + " - Streak!";
 				achStates[0] = true;
+				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
+				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
+				  type: "PUT",
+				  contentType: "application/json" } );
 				break;
 			case 1: // Score achievement
 				achCurrent = score + " Points!";
 				achStates[1] = true;
+				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
+				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
+				  type: "PUT",
+				  contentType: "application/json" } );
 				break;
 			case 2: // Level achievement
 				achCurrent = "Level " + level + "!";
 				achStates[2] = true;
+				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
+				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
+				  type: "PUT",
+				  contentType: "application/json" } );
 				break;
 		}
 		achFlag = true;
