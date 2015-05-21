@@ -1454,6 +1454,12 @@ function gameOver() {
 		backButtonPaper.on('click', function() {
 			window.location.assign("#");
 			});
+		backButtonPaper.onMouseEnter = function(event) {
+			this.source = 'pngBtns/BackBtnOver.png';
+		};
+		backButtonPaper.onMouseLeave = function(event) {
+			this.source = 'pngBtns/BackBtn.png';
+		};
 		
 			
 		var replayButtonPaper = new Raster('pngBtns/ReplayBtn.png');
@@ -1463,6 +1469,12 @@ function gameOver() {
 			// window.location.assign("#play");
 			window.location.reload();
 			});
+		replayButtonPaper.onMouseEnter = function(event) {
+			this.source = 'pngBtns/ReplayBtnOver.png';
+		};
+		replayButtonPaper.onMouseLeave = function(event) {
+			this.source = 'pngBtns/ReplayBtn.png';
+		};
 		
 
 		snd_gameover.play();//game over sound
