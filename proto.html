@@ -534,7 +534,8 @@ $(function() {
 	  }
     });
   });
-  
+	
+	
 
 			
   //user login
@@ -558,10 +559,16 @@ $(function() {
 					if (value.name == username && value.password == userpass) {
 						if (value.achieveReached[0] == true)
 							nameArr[0] = "pngBtns/ScoreAchiev.png";
+						else
+							nameArr[0] = "pngBtns/scoregrey.png";
 						if (value.achieveReached[1] == true)
 							nameArr[1] = "pngBtns/StreakAchiev.png";
+						else
+							nameArr[1] = "pngBtns/streakgrey.png";
 						if (value.achieveReached[2] == true)
 							nameArr[2] = "pngBtns/LevelAchiev.png";
+						else
+							nameArr[2] = "pngBtns/levelgrey.png";
 					}
 				});
 				$("#img0").attr("src", nameArr[0]);
@@ -582,6 +589,9 @@ $(function() {
 				  type: "POST",
 				  contentType: "application/json" }
 				);
+				$("#img0").attr("src", "pngBtns/scoregrey.png");
+				$("#img1").attr("src", "pngBtns/streakgrey.png");
+				$("#img2").attr("src", "pngBtns/levelgrey.png");
 				setTimeout(function(){$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
 					$.each(data, function(index, value){
 						userID = value._id["$oid"];
@@ -1517,6 +1527,33 @@ function gameOver() {
 		
 
 		snd_gameover.play();//game over sound
+		
+		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+
+				var nameArr = ["", "", ""];
+				$.each(data, function(index, value){
+					if (value.name == username && value.password == userpass) {
+						if (value.achieveReached[0] == true)
+							nameArr[0] = "pngBtns/ScoreAchiev.png";
+						else
+							nameArr[0] = "pngBtns/scoregrey.png";
+						if (value.achieveReached[1] == true)
+							nameArr[1] = "pngBtns/StreakAchiev.png";
+						else
+							nameArr[1] = "pngBtns/streakgrey.png";
+						if (value.achieveReached[2] == true)
+							nameArr[2] = "pngBtns/LevelAchiev.png";
+						else
+							nameArr[2] = "pngBtns/levelgrey.png";
+					}
+				});
+				$("#img0").attr("src", nameArr[0]);
+				$("#img1").attr("src", nameArr[1]);
+				$("#img2").attr("src", nameArr[2]);
+				
+				/*$('#tblLeaderBoard').append(html);*/
+		});
+		
 		$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
 		  data: JSON.stringify( { "name" : username , "score" : score } ),
 		  type: "POST",
