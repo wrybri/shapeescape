@@ -358,81 +358,29 @@
 
 	<div data-role="page" id="leaderboard">
 		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
-		
-		<canvas id="shapebg3" width=2000 height=2000></canvas>
-		<div class="pagestuff">
-			<p><span id="lbname0"></span>
-			<span id="lbscore0"></span>
-			<p><span id="lbname1"></span>
-			<span id="lbscore1"></span>
-			<p><span id="lbname2"></span>
-			<span id="lbscore2"></span>
-			<p><span id="lbname3"></span>
-			<span id="lbscore3"></span>
-			<p><span id="lbname4"></span>
-			<span id="lbscore4"></span>
-			<p><span id="lbname5"></span>
-			<span id="lbscore5"></span>
-			<p><span id="lbname6"></span>
-			<span id="lbscore6"></span>
-			<p><span id="lbname7"></span>
-			<span id="lbscore7"></span>
-			<p><span id="lbname8"></span>
-			<span id="lbscore8"></span>
-			<p><span id="lbname9"></span>
-			<span id="lbscore9"></span>
-		</div>
-		<script>
-		
-		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
-			var i = 0;
-			var scoreArr = [0,0,0,0,0,0,0,0,0,0];
-			var nameArr = ["", "", "", "", "", "", "", "", "", ""];
-			$.each(data, function(index, value){
-				var k = 0;
-				for (k = 0 ; k < scoreArr.length ; k++){
-					if (value.score >= scoreArr[k]){
-						var temp = 0;
-						for ( var z = scoreArr.length-1 ; z > k ; z--){
-							scoreArr[z] = scoreArr[z-1];
-							nameArr[z] = nameArr[z-1];
-						}
-						scoreArr[k] = value.score;
-						nameArr[k] = value.name;
-						k = 10;
-					}
-				}
-			});
-		});		
-		</script>
-	</div>
 
-	<div data-role="page" id="leaderboard">
-		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
 		
 		<canvas id="shapebg3" width=2000 height=2000></canvas>
-		<div class="pagestuff">
-			<p><span id="lbname0"></span>
-			<span id="lbscore0"></span>
-			<p><span id="lbname1"></span>
-			<span id="lbscore1"></span>
-			<p><span id="lbname2"></span>
-			<span id="lbscore2"></span>
-			<p><span id="lbname3"></span>
-			<span id="lbscore3"></span>
-			<p><span id="lbname4"></span>
-			<span id="lbscore4"></span>
-			<p><span id="lbname5"></span>
-			<span id="lbscore5"></span>
-			<p><span id="lbname6"></span>
-			<span id="lbscore6"></span>
-			<p><span id="lbname7"></span>
-			<span id="lbscore7"></span>
-			<p><span id="lbname8"></span>
-			<span id="lbscore8"></span>
-			<p><span id="lbname9"></span>
-			<span id="lbscore9"></span>
+		
+		<div class="leaderboardTable">
+		<h1><strong>Leaderboard</strong></h1>
+		<table class="tftable" border="1">
+		<tr><th><h2>Username</h2></th><th><h2>Score</h2></th></tr>
+		<tr><td><h3><span id="lbscore0"></span></h3></td><td><h3><span id="lbname0"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore1"></span></h3></td><td><h3><span id="lbname1"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore2"></span></h3></td><td><h3><span id="lbname2"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore3"></span></h3></td><td><h3><span id="lbname3"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore4"></span></h3></td><td><h3><span id="lbname4"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore5"></span></h3></td><td><h3><span id="lbname5"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore6"></span></h3></td><td><h3><span id="lbname6"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore7"></span></h3></td><td><h3><span id="lbname7"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore8"></span></h3></td><td><h3><span id="lbname8"></span></h3></td></tr>
+		<tr><td><h3><span id="lbscore9"></span></h3></td><td><h3><span id="lbname9"></span></h3></td></tr>
+		</table>
 		</div>
+		
+
+
 		<script>
 		
 		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
