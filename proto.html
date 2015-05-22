@@ -70,7 +70,7 @@
 	</div>
 	
 	<div data-role="page" id="play">
-		<canvas id = "braingame" width = 2000 height = 2000></canvas>
+		<canvas id = "braingame" width = 2000 height = 2000 onload="load()"></canvas>
 		<p><span id = "memo">Shape Escape v0.1</span>
 		<p><span id = "score"></span>
 		<p><span id = "memo2"></span>
@@ -85,7 +85,7 @@
 		</audio>
 		<script>
 		// This function has to go in a separate script on this page due to the wacky way the Paper.JS
-		// script has its own namespace. (therefore html elements can't call functions within it)  -Bri 
+		// script has its own namespace. (therefore html elements can't call functions within it)  -Bri
 		function setLowVolume() {
 			var myAudio = document.getElementById("background");  
 			myAudio.volume = 1.0; //Changed this to 0.5 or 50% volume since the function is called Set Half Volume ;)
@@ -1639,6 +1639,7 @@ function gameOver() {
 			canvas.height - 40 - gameOverPadding * 2];
 		backButtonPaper.on('click', function() {
 			window.location.assign("#");
+			location.reload();		
 			});
 		backButtonPaper.onMouseEnter = function(event) {
 			this.source = 'pngBtns/BackBtnOver.png';
