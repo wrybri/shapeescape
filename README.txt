@@ -1,0 +1,3 @@
+Due to limitations of our graphical framework Paper.JS, we've experienced some display issues with certain browsers and versions. The game does not display properly on any Firefox browser, and on certain computers the game inexplicably doesn't display properly on Chrome.
+
+If the game looks totally wrong when you load it, please try a different browser (Chrome recommended) or computer. We have not been able to track the source of why it doesn't always work on Chrome.
