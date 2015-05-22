@@ -403,7 +403,7 @@
 					}
 				}
 			});
-		});
+		});		
 		</script>
 	</div>
 
@@ -562,10 +562,10 @@ var rulesFontSize = 40;
 var rulesFont = "arial";
 var rulesNoWidth = 6;					// Line-width for the 'no' symbol
 var rulesStrokeWidth = 4;				// Stroke-width for the rules shape
-var rulesColour = "red";
+var rulesColour = "white";
 var rulesNoSize = 1.5;					// How big the 'no' symbol for rules should be, vs mob-size
 var rulesNoColour = "red";				// Colour for 'no' symbol
-var rulesShapeColour = "black";			// Colour for rules shapes
+var rulesShapeColour = "white";			// Colour for rules shapes
 var ruleShapePosMax = 1;				// Max number of must-have-this-shape rules
 var ruleShapeNegMax = 2;				// Max number of must-not-have-this-shape rules
 var ruleColourPosMax = 1;				// Max number of must-have-this-colour rules
@@ -635,6 +635,18 @@ var achPaper;							// Paper.js obj for 'ach' text
 var achMax = 1;							// Max number of achievements
 var achStates = new Array(achMax);		// Flags for achievements being completed
 var userID = null;
+
+// Background images
+var bgImages = ['hex-mountain.jpg', 'blue-scribble.jpg', 'blue-squares.jpg', 'fractal.jpg',
+	'pink-trigrid.jpg', 'sacred.jpg'];
+var background = bgImages[0];
+
+
+// Initialize background image
+var backgroundPaper = new Raster('img/backgrounds/' + background, [canvas.width/2, canvas.height/2]);
+// backgroundPaper.size = [canvas.width, canvas.height];
+backgroundPaper.scale(1.1, 1.1, backgroundPaper.center);
+backgroundPaper.sendToBack();
 
 //VOLUME SLIDER
 $(function() {
@@ -890,6 +902,7 @@ new PointText({
 	fontFamily: rulesFont,
 	fillColor: rulesColour
 });
+
 // Handle Paper.js click events
 function onMouseDown(event) {
 	openGate();
@@ -1273,6 +1286,7 @@ function drawRuleSetPaper() {
 				fillColor: rules[looper][3]
 			});
 			rulesRect.sendToBack();
+			rulesRect.moveAbove(backgroundPaper);
 			rules[looper][4].push(rulesRect);
 		}
 		if (rules[looper][1] == 1) { 	// A reverse (Not) rule
@@ -1408,6 +1422,7 @@ function drawPaperRule(rType, rX, rY) {
 		break;
 	}
 	mobPaper.sendToBack();
+	mobPaper.moveAbove(backgroundPaper);
 	return mobPaper;
 }
 
