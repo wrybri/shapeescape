@@ -268,10 +268,147 @@
 		
 		<canvas id="shapebg4" width=2000 height=2000></canvas>
 		<div class="pagestuff">
+			<h2>Your Achievments:</h2>
+			<br />
 			<img src="pngBtns/scoregrey.png" alt="Locked Achievment" id="img0">
 			<img src="pngBtns/streakgrey.png" alt="Locked Achievment" id="img1">
-			<img src="pngBtns/levelgrey.png" alt="Locked Achievment" id="img2">
+			<img src="pngBtns/levelgrey.png" alt="Locked Achievment" id="img2">	
+			<br />
+			<a href="#dialog-form2" id="viewAchiev"><h2>Click to see what achievements your friend has earned (shown below)!</h2></a>
+			<br />
+			<!--<form>
+				Username: <input type="text" name="FirstName" id="uname" value=""><br>
+				<button onclick="loadAchiev()">View</button>
+			</form>
+			-->
+			<div id="dialog-form2" title="Achievements">
+			  <form>
+				<fieldset>
+				  <label for="name">User Name</label>
+				  <input type="text" name="name" id="name2" value="" class="text ui-widget-content ui-corner-all">			 
+				  <!-- form submission with enter key (doesn't work) -->
+				  <!--<input type="submit" tabindex="-1" style="position:absolute; bottom:-1000px">-->
+				</fieldset>
+			  </form>
+			</div>
+			<img src="pngBtns/scoregrey.png" alt="Locked Achievment" id="img3">
+			<img src="pngBtns/streakgrey.png" alt="Locked Achievment" id="img4">
+			<img src="pngBtns/levelgrey.png" alt="Locked Achievment" id="img5">	
 		</div>
+		<script>
+		$(function() {
+			var dialog, form,
+	 
+			// From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+			name = $( "#name2" ),
+			allFields = $( [] ).add( name );
+			
+			function viewAchiev(){
+				$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+					var nameArr = ["", "", ""];
+					$.each(data, function(index, value){
+						if (value.name == name.val()) {
+							if (value.achieveReached[0] == true)
+								nameArr[0] = "pngBtns/ScoreAchiev.png";
+							if (value.achieveReached[1] == true)
+								nameArr[1] = "pngBtns/StreakAchiev.png";
+							if (value.achieveReached[2] == true)
+								nameArr[2] = "pngBtns/LevelAchiev.png";
+						}
+					});
+					$("#img3").attr("src", nameArr[0]);
+					$("#img4").attr("src", nameArr[1]);
+					$("#img5").attr("src", nameArr[2]);
+					
+					/*$('#tblLeaderBoard').append(html);*/
+				});
+				dialog.dialog( "close" );
+			}
+			
+			dialog = $( "#dialog-form2" ).dialog({
+			  autoOpen: false,
+			  height: 280,
+			  width: 430,
+			  modal: true,
+			  show: {
+				effect: "blind",
+				duration: 300
+			  },
+			  hide: {
+				effect: "explode",
+				duration: 600
+			  },
+			  buttons: {
+				"View": viewAchiev,
+					Cancel: function() {
+						dialog.dialog( "close" );
+					}
+				},
+				close: function() {
+					allFields.removeClass( "ui-state-error" );
+				}
+			});
+		 
+			form = dialog.find( "form" ).on( "submit", function( event ) {
+			  event.preventDefault();
+			  addUser();
+			});
+		 
+			$( "#viewAchiev" ).on( "click", function() {
+			  dialog.dialog( "open" );
+			});
+		});
+		</script>	
+	</div>
+
+	<div data-role="page" id="leaderboard">
+		<a href="#" data-rel="back"><img src="pngBtns/BackBtn.png" class="menubtns backbtns" /></a>
+		
+		<canvas id="shapebg3" width=2000 height=2000></canvas>
+		<div class="pagestuff">
+			<p><span id="lbname0"></span>
+			<span id="lbscore0"></span>
+			<p><span id="lbname1"></span>
+			<span id="lbscore1"></span>
+			<p><span id="lbname2"></span>
+			<span id="lbscore2"></span>
+			<p><span id="lbname3"></span>
+			<span id="lbscore3"></span>
+			<p><span id="lbname4"></span>
+			<span id="lbscore4"></span>
+			<p><span id="lbname5"></span>
+			<span id="lbscore5"></span>
+			<p><span id="lbname6"></span>
+			<span id="lbscore6"></span>
+			<p><span id="lbname7"></span>
+			<span id="lbscore7"></span>
+			<p><span id="lbname8"></span>
+			<span id="lbscore8"></span>
+			<p><span id="lbname9"></span>
+			<span id="lbscore9"></span>
+		</div>
+		<script>
+		
+		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Leaderboard?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
+			var i = 0;
+			var scoreArr = [0,0,0,0,0,0,0,0,0,0];
+			var nameArr = ["", "", "", "", "", "", "", "", "", ""];
+			$.each(data, function(index, value){
+				var k = 0;
+				for (k = 0 ; k < scoreArr.length ; k++){
+					if (value.score >= scoreArr[k]){
+						var temp = 0;
+						for ( var z = scoreArr.length-1 ; z > k ; z--){
+							scoreArr[z] = scoreArr[z-1];
+							nameArr[z] = nameArr[z-1];
+						}
+						scoreArr[k] = value.score;
+						nameArr[k] = value.name;
+						k = 10;
+					}
+				}
+			});
+		</script>
 	</div>
 
 	<div data-role="page" id="leaderboard">
