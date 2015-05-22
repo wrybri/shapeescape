@@ -298,9 +298,9 @@
 				</fieldset>
 			  </form>
 			</div>
-			<img src="pngBtns/scoregrey.png" alt="Locked Achievment" id="img3">
-			<img src="pngBtns/streakgrey.png" alt="Locked Achievment" id="img4">
-			<img src="pngBtns/levelgrey.png" alt="Locked Achievment" id="img5">	
+			<img src="pngBtns/scoregrey.png" alt="Locked Achievment" id="img0">
+			<img src="pngBtns/streakgrey.png" alt="Locked Achievment" id="img1">
+			<img src="pngBtns/levelgrey.png" alt="Locked Achievment" id="img2">	
 		</div>
 		<script>
 		$(function() {
@@ -329,9 +329,9 @@
 								nameArr[2] = "pngBtns/levelgrey.png";
 						}
 					});
-					$("#img3").attr("src", nameArr[0]);
-					$("#img4").attr("src", nameArr[1]);
-					$("#img5").attr("src", nameArr[2]);
+					$("#img0").attr("src", nameArr[0]);
+					$("#img1").attr("src", nameArr[1]);
+					$("#img2").attr("src", nameArr[2]);
 					
 					/*$('#tblLeaderBoard').append(html);*/
 				});
@@ -1508,7 +1508,7 @@ function achieveInit(aType) {
 		switch (aType) {
 			case 0:	// Hit-streak achievement
 				achCurrent = achStreak + " - Streak!";
-				achStates[0] = true;
+				achStates[1] = true;
 				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
 				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
 				  type: "PUT",
@@ -1516,7 +1516,7 @@ function achieveInit(aType) {
 				break;
 			case 1: // Score achievement
 				achCurrent = score + " Points!";
-				achStates[1] = true;
+				achStates[0] = true;
 				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
 				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
 				  type: "PUT",
