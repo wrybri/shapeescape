@@ -73,12 +73,13 @@ padding-left: 25px;
 }
 
 .shadows {
-	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
-	font-size: 16px;
+	font-family: Arial;
+	font-size: 18px;
 	padding: 4px 50px;
 	text-align: center;
 	text-transform: uppercase;
 	text-rendering: optimizeLegibility;
+	-webkit-text-stroke: 1px #FFF;
 	position: absolute;
 	right:10;
 	bottom:10;
