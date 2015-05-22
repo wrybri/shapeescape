@@ -592,11 +592,11 @@ var userID = null;
 // Background images
 var bgImages = ['hex-mountain.jpg', 'blue-scribble.jpg', 'blue-squares.jpg', 'fractal.jpg',
 	'pink-trigrid.jpg', 'sacred.jpg'];
-var background = bgImages[0];
+var backgroundImg = bgImages[0];
 
 
 // Initialize background image
-var backgroundPaper = new Raster('img/backgrounds/' + background, [canvas.width/2, canvas.height/2]);
+var backgroundPaper = new Raster('img/backgrounds/' + backgroundImg, [canvas.width/2, canvas.height/2]);
 // backgroundPaper.size = [canvas.width, canvas.height];
 backgroundPaper.scale(1.1, 1.1, backgroundPaper.center);
 backgroundPaper.sendToBack();
