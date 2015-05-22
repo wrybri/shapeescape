@@ -67,6 +67,18 @@
 			  </form>
 			</div>
 		</div>
+		<audio preload="metadata" id="snd_good"> 
+		<source src="sound/chaching.mp3">
+		</audio>
+		<audio preload="metadata" id="snd_bad"> 
+		<source src="sound/doh.mp3">
+		</audio>
+		<audio preload="metadata" id="snd_ach"> 
+		<source src="sound/foghorn.mp3">
+		</audio>
+		<audio preload="metadata" id="snd_gameover"> 
+		<source src="sound/disappointed.mp3">
+		</audio>
 	</div>
 	
 	<div data-role="page" id="play">
@@ -620,6 +632,10 @@ $(function() {
       animate: true,
 	  slide: function(event,ui) {
 		background.volume = ui.value * 0.01;
+		document.getElementById('snd_good').volume = ui.value * 0.01;
+		document.getElementById('snd_bad').volume = ui.value * 0.01;
+		document.getElementById('snd_ach').volume = ui.value * 0.01;
+		document.getElementById('snd_gameover').volume = ui.value * 0.01;
 	  }
     });
 	$( "#sfx" ).slider({
@@ -628,7 +644,10 @@ $(function() {
       range: "min",
       animate: true,
 	  slide: function(event,ui) {
-		
+		document.getElementById('snd_good').volume = ui.value * 0.01;
+		document.getElementById('snd_bad').volume = ui.value * 0.01;
+		document.getElementById('snd_ach').volume = ui.value * 0.01;
+		document.getElementById('snd_gameover').volume = ui.value * 0.01;
 	  }
     });
   });
@@ -1384,7 +1403,7 @@ function drawPaperRule(rType, rX, rY) {
 function ruleGood(bX, bY) {
 	//scoreStreak++;
 	levelScore();
-	var snd_good = new Audio("sound/chaching.mp3"); // hit sound
+	//var snd_good = new Audio("sound/chaching.mp3"); // hit sound
 	if (goodFlag == false) {
 		score++;
 		goodFlag = true;
@@ -1398,7 +1417,7 @@ function ruleGood(bX, bY) {
 		goodPaper.fontSize = goodFontSizeStart;
 		goodPaper.fontFamily = goodFont;
 		goodPaper.fillColor = goodPaperColour;
-		snd_good.play(); //"Good" choices
+		document.getElementById('snd_good').play(); //"Good" choices
 		
 		// Kick-off a new score-streak achievement
 		if (!achStates[0] && ++scoreStreak >= achStreak) {
@@ -1440,7 +1459,7 @@ function ruleGood(bX, bY) {
 // Draw an animated "bad" message on screen for misses
 function ruleBad(bX, bY) {
 	levelScore();
-	var snd_bad = new Audio("sound/doh.mp3"); //miss sound
+	//var snd_bad = new Audio("sound/doh.mp3"); //miss sound
 	//scoreMemo.innerHTML += "Incorrect!!!<br>\n";
 	if (badFlag == false) {
 		scoreStreak = 0;
@@ -1456,7 +1475,7 @@ function ruleBad(bX, bY) {
 		badPaper.fontSize = badFontSizeStart;
 		badPaper.fontFamily = badFont;
 		badPaper.fillColor = badPaperColour;
-		snd_bad.play(); //"Bad" choices
+		document.getElementById('snd_bad').play(); //"Bad" choices
 		
 		// George - put your sound-effect code here for "Bad" choices
 		
@@ -1483,7 +1502,7 @@ function ruleBad(bX, bY) {
 
 function achieveInit(aType) {
 	levelScore();
-	var snd_ach = new Audio("sound/foghorn.mp3"); //achievement sound
+	//var snd_ach = new Audio("sound/foghorn.mp3"); //achievement sound
 
 	if (achFlag == false) {
 		switch (aType) {
@@ -1522,7 +1541,7 @@ function achieveInit(aType) {
 		achPaper.fontSize = achFontSizeStart;
 		achPaper.fontFamily = achFont;
 		achPaper.fillColor = achPaperColour;
-		snd_ach.play(); //"Bad" choices		
+		document.getElementById('snd_ach').play(); //"Bad" choices		
 	}
 	
 	if (arguments.length == 0) {
@@ -1545,7 +1564,7 @@ function achieveInit(aType) {
 
 function gameOver() {
 	levelScore();
-	var snd_gameover = new Audio("sound/disappointed.mp3");  //game over sound
+	//var snd_gameover = new Audio("sound/disappointed.mp3");  //game over sound
 	
 	if(gameEnd == false){
 		// Big "Game Over" text
@@ -1603,7 +1622,7 @@ function gameOver() {
 		};
 		
 
-		snd_gameover.play();//game over sound
+		document.getElementById('snd_gameover').play();//game over sound
 		
 		$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
 
