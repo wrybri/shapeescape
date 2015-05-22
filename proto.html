@@ -305,10 +305,16 @@
 						if (value.name == name.val()) {
 							if (value.achieveReached[0] == true)
 								nameArr[0] = "pngBtns/ScoreAchiev.png";
+							else
+								nameArr[0] = "pngBtns/scoregrey.png";
 							if (value.achieveReached[1] == true)
 								nameArr[1] = "pngBtns/StreakAchiev.png";
+							else
+								nameArr[1] = "pngBtns/streakgrey.png";
 							if (value.achieveReached[2] == true)
 								nameArr[2] = "pngBtns/LevelAchiev.png";
+							else
+								nameArr[2] = "pngBtns/levelgrey.png";
 						}
 					});
 					$("#img3").attr("src", nameArr[0]);
