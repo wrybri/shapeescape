@@ -298,8 +298,8 @@
 				</fieldset>
 			  </form>
 			</div>
-			<img src="pngBtns/scoregrey.png" alt="Locked Achievment" id="img0">
-			<img src="pngBtns/streakgrey.png" alt="Locked Achievment" id="img1">
+			<img src="pngBtns/streakgrey.png" alt="Locked Achievment" id="img0">
+			<img src="pngBtns/scoregrey.png" alt="Locked Achievment" id="img1">
 			<img src="pngBtns/levelgrey.png" alt="Locked Achievment" id="img2">	
 		</div>
 		<script>
@@ -316,13 +316,13 @@
 					$.each(data, function(index, value){
 						if (value.name == name.val()) {
 							if (value.achieveReached[0] == true)
-								nameArr[0] = "pngBtns/ScoreAchiev.png";
+								nameArr[0] = "pngBtns/StreakAchiev.png";
 							else
-								nameArr[0] = "pngBtns/scoregrey.png";
+								nameArr[0] = "pngBtns/streakgrey.png";
 							if (value.achieveReached[1] == true)
-								nameArr[1] = "pngBtns/StreakAchiev.png";
+								nameArr[1] = "pngBtns/ScoreAchiev.png";
 							else
-								nameArr[1] = "pngBtns/streakgrey.png";
+								nameArr[1] = "pngBtns/scoregrey.png";
 							if (value.achieveReached[2] == true)
 								nameArr[2] = "pngBtns/LevelAchiev.png";
 							else
@@ -681,8 +681,8 @@ $(function() {
 				  type: "POST",
 				  contentType: "application/json" }
 				);
-				$("#img0").attr("src", "pngBtns/scoregrey.png");
-				$("#img1").attr("src", "pngBtns/streakgrey.png");
+				$("#img0").attr("src", "pngBtns/streakgrey.png");
+				$("#img1").attr("src", "pngBtns/scoregrey.png");
 				$("#img2").attr("src", "pngBtns/levelgrey.png");
 				setTimeout(function(){$.getJSON("https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements?q={\"name\":\""+name.val()+"\",\"password\":\""+password.val()+"\"}&apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ", function(data){
 					$.each(data, function(index, value){
@@ -1508,7 +1508,7 @@ function achieveInit(aType) {
 		switch (aType) {
 			case 0:	// Hit-streak achievement
 				achCurrent = achStreak + " - Streak!";
-				achStates[1] = true;
+				achStates[0] = true;
 				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
 				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
 				  type: "PUT",
@@ -1516,7 +1516,7 @@ function achieveInit(aType) {
 				break;
 			case 1: // Score achievement
 				achCurrent = score + " Points!";
-				achStates[0] = true;
+				achStates[1] = true;
 				$.ajax( { url: "https://api.mongolab.com/api/1/databases/comp2910/collections/Achievements/"+userID+"?apiKey=Vj5CySJu_PZcXUFihbe274Ty73YE9rHJ",
 				  data: JSON.stringify( { "$set" : { "achieveReached" : achStates } } ),
 				  type: "PUT",
@@ -1630,13 +1630,13 @@ function gameOver() {
 				$.each(data, function(index, value){
 					if (value.name == username && value.password == userpass) {
 						if (value.achieveReached[0] == true)
-							nameArr[0] = "pngBtns/ScoreAchiev.png";
+							nameArr[0] = "pngBtns/StreakAchiev.png";
 						else
-							nameArr[0] = "pngBtns/scoregrey.png";
+							nameArr[0] = "pngBtns/streakgrey.png";
 						if (value.achieveReached[1] == true)
-							nameArr[1] = "pngBtns/StreakAchiev.png";
+							nameArr[1] = "pngBtns/ScoreAchiev.png";
 						else
-							nameArr[1] = "pngBtns/streakgrey.png";
+							nameArr[1] = "pngBtns/scoregrey.png";
 						if (value.achieveReached[2] == true)
 							nameArr[2] = "pngBtns/LevelAchiev.png";
 						else
